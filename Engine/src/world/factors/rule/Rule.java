@@ -5,7 +5,7 @@ import java.util.List;
 public class Rule {
     private String name;
     private List<Action> actions;
-    //private Activation activation;
+    private Activation activation;
 
 
     public Rule()
