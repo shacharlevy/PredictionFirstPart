@@ -7,5 +7,5 @@ import java.util.List;
 public interface EntityDefinition {
     String getName();
     int getPopulation();
-    List<PropertyDefinition> getProps();
+    void addProperty(PropertyDefinition propertyDefinition);
 }

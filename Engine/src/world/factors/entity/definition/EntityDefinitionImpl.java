@@ -28,8 +28,8 @@ public class EntityDefinitionImpl implements EntityDefinition {
     }
 
     @Override
-    public List<PropertyDefinition> getProps() {
-        return properties;
+    public void addProperty(PropertyDefinition propertyDefinition) {
+        properties.add(propertyDefinition);
     }
 
 }

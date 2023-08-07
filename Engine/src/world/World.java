@@ -12,4 +12,10 @@ public class World {
     private List<EntityDefinition> entities;
     private List<Rule> rules;
     private Termination termination;
+    World(Environment environment, List<EntityDefinition> entities, List<Rule> rules, Termination termination) {
+        this.environment = environment;
+        this.entities = entities;
+        this.rules = rules;
+        this.termination = termination;
+    }
 }

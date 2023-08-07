@@ -22,26 +22,52 @@ public class IncreaseAction extends AbstractAction {
     @Override
     public void invoke(Context context) {
         PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(property);
-        if (!verifyNumericPropertyTYpe(propertyInstance)) {
-            throw new IllegalArgumentException("increase action can't operate on a none number property [" + property);
-        }
 
-        Integer v = PropertyType.DECIMAL.convert(propertyInstance.getValue());
+        if (verifyDecimalPropertyType(propertyInstance) && ) {
+            Integer v = PropertyType.DECIMAL.convert(propertyInstance.getValue());
+
+            propertyInstance.updateValue(v + this.byExpression);
+            return;
+        }
 
         // something that evaluates expression to a number, say the result is 5...
         // now you can also access the environment variables through the active environment...
-        // PropertyInstance blaPropertyInstance = activeEnvironment.getProperty("bla");
+        PropertyInstance blaPropertyInstance = activeEnvironment.getProperty("bla");
         int x = 5;
 
         // actual calculation
         int result = x + v;
 
+        else if (verifyFloatPropertyType(propertyInstance)) {
+            Float v = PropertyType.FLOAT.convert(propertyInstance.getValue());
+            propertyInstance.updateValue(v + this.byExpression);
+            return;
+        }
+
+        else {
+            throw new IllegalArgumentException("increase action can't operate on a none number property [" + property + "]");
+        }
+
+
+
+
+        if (!verifyNumericPropertyType(propertyInstance)) {
+            throw new IllegalArgumentException("increase action can't operate on a none number property [" + property + "]");
+        }
+        if (PropertyType.DECIMAL.equals(propertyInstance.getPropertyDefinition().getType())) {
+            throw new IllegalArgumentException("increase action can't operate on a none number property [" + property + "]");
+        }
+        Integer v = PropertyType.DECIMAL.convert(propertyInstance.getValue());
+
         // updating result on the property
-        propertyInstance.updateValue(result);
+        propertyInstance.updateValue(v + this.byExpression);
     }
 
-    private boolean verifyNumericPropertyTYpe(PropertyInstance propertyValue) {
-        return
-                PropertyType.DECIMAL.equals(propertyValue.getPropertyDefinition().getType()) || PropertyType.FLOAT.equals(propertyValue.getPropertyDefinition().getType());
+    private boolean verifyDecimalPropertyType(PropertyInstance propertyValue) {
+        return PropertyType.DECIMAL.equals(propertyValue.getPropertyDefinition().getType());
+    }
+
+    private boolean verifyFloatPropertyType(PropertyInstance propertyValue) {
+        return PropertyType.FLOAT.equals(propertyValue.getPropertyDefinition().getType());
     }
 }

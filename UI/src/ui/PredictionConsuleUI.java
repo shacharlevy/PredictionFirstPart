@@ -46,6 +46,7 @@ public class PredictionConsuleUI {
                     } catch (Exception e) {
                         System.out.println("Error loading XML file: " + e.getMessage());
                     }
+
                     break;
                 case SHOW_SIMULATION_DETAILS:
                     System.out.println("Current loaded path: " + this.currentLoadedPathString);

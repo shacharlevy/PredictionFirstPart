@@ -3,6 +3,7 @@ package facade;
 import resources.schema.generatedWorld.PRDWorld;
 import static validator.XMLValidator.*;
 import world.World;
+import world.factors.environment.Environment;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -37,6 +38,12 @@ public class Facade {
         PRDWorld generatedWorld = fromXmlFileToObject(xmlPath);
         validateXMLContent(generatedWorld);
 
+    }
+
+    private World convertPRDWorldToWorld(PRDWorld generatedWorld) {
+        Environment environment = new Environment(generatedWorld.getEnvironment());
+
+        return new World();
     }
 
 }
