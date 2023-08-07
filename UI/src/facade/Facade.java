@@ -3,7 +3,10 @@ package facade;
 import resources.schema.generatedWorld.PRDWorld;
 import static validator.XMLValidator.*;
 import world.World;
-import world.factors.environment.Environment;
+import world.factors.entity.definition.EntityDefinition;
+import world.factors.environment.definition.api.EnvVariablesManager;
+import world.factors.environment.definition.impl.EnvVariableManagerImpl;
+
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -12,6 +15,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Facade {
     World world = new World();
@@ -40,11 +46,7 @@ public class Facade {
 
     }
 
-    private World convertPRDWorldToWorld(PRDWorld generatedWorld) {
-        Environment environment = new Environment(generatedWorld.getEnvironment());
 
-        return new World();
-    }
 
 }
 
