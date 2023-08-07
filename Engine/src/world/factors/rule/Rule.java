@@ -1,16 +1,13 @@
 package world.factors.rule;
 
+import world.factors.action.api.Action;
+
 import java.util.List;
 
-public class Rule {
-    private String name;
-    private List<Action> actions;
-    private Activation activation;
-
-
-    public Rule()
-    {
-
-    }
+public interface Rule {
+    String getName();
+    Activation getActivation();
+    List<Action> getActionsToPerform();
+    void addAction(Action action);
 
 }

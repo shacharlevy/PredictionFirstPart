@@ -1,6 +1,6 @@
 package world;
 
-import world.factors.entity.EntityDefinition;
+import world.factors.entity.definition.EntityDefinition;
 import world.factors.environment.Environment;
 import world.factors.rule.Rule;
 import world.factors.termination.Termination;
