@@ -1,5 +1,6 @@
 package world.factors.entity.definition;
 
+import world.factors.property.definition.api.EntityPropertyDefinition;
 import world.factors.property.definition.api.PropertyDefinition;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ public class EntityDefinitionImpl implements EntityDefinition {
 
     private final String name;
     private final int population;
-    private final List<PropertyDefinition> properties;
+    private final List<EntityPropertyDefinition> properties;
 
     public EntityDefinitionImpl(String name, int population) {
         this.name = name;
@@ -28,8 +29,12 @@ public class EntityDefinitionImpl implements EntityDefinition {
     }
 
     @Override
-    public void addProperty(PropertyDefinition propertyDefinition) {
+    public void addProperty(EntityPropertyDefinition propertyDefinition) {
         properties.add(propertyDefinition);
     }
 
+    @Override
+    public List<EntityPropertyDefinition> getProps() {
+        return properties;
+    }
 }

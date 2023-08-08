@@ -23,20 +23,12 @@ public class IncreaseAction extends AbstractAction {
     public void invoke(Context context) {
         PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(property);
 
-        if (verifyDecimalPropertyType(propertyInstance) && ) {
+        if (verifyDecimalPropertyType(propertyInstance)) {
             Integer v = PropertyType.DECIMAL.convert(propertyInstance.getValue());
 
             propertyInstance.updateValue(v + this.byExpression);
             return;
         }
-
-        // something that evaluates expression to a number, say the result is 5...
-        // now you can also access the environment variables through the active environment...
-        PropertyInstance blaPropertyInstance = activeEnvironment.getProperty("bla");
-        int x = 5;
-
-        // actual calculation
-        int result = x + v;
 
         else if (verifyFloatPropertyType(propertyInstance)) {
             Float v = PropertyType.FLOAT.convert(propertyInstance.getValue());

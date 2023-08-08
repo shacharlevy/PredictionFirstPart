@@ -3,6 +3,9 @@ package context;
 import world.factors.entity.execution.EntityInstance;
 import world.factors.entity.execution.manager.EntityInstanceManager;
 import world.factors.environment.execution.api.ActiveEnvironment;
+import world.factors.expression.api.ExpressionType;
+import world.factors.function.api.Function;
+import world.factors.function.api.FunctionType;
 import world.factors.property.execution.PropertyInstance;
 
 public class ContextImpl implements Context {
@@ -28,7 +31,47 @@ public class ContextImpl implements Context {
     }
 
     @Override
-    public PropertyInstance getEnvironmentVariable(String name) {
-        return activeEnvironment.getProperty(name);
+    public ActiveEnvironment getEnvironment() {
+        return activeEnvironment;
+    }
+
+    @Override
+    public ExpressionType getExpressionType(String expression) {
+        if (isFunctionExpression(expression)) {
+            String functionName = expression.substring(0, expression.indexOf("("));
+            if (FunctionType.isFunctionType(functionName)) {
+                return ExpressionType.UTIL_FUNCTION;
+            }
+        }
+        else if (isPropertyName(expression)) {
+            return ExpressionType.PROPERTY_NAME;
+        }
+        return ExpressionType.FREE_VALUE;
+    }
+    //TODO: move to validator later
+    private boolean isFunctionExpression(String expression) {
+        if (expression.charAt(expression.length() - 1) != ')') {
+            return false;
+        }
+        int firstOpenParenthesis = expression.indexOf('(');
+        if (firstOpenParenthesis == -1) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isPropertyName(String expression) {
+        try {
+            primaryEntityInstance.getPropertyByName(expression);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    private FunctionType getFunctionType(String expression) {
+        String functionName = expression.substring(0, expression.indexOf("("));
+        return FunctionType.getFunctionType(functionName);
     }
 }
