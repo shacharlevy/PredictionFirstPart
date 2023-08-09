@@ -2,6 +2,7 @@ package world.factors.function.impl;
 
 import context.Context;
 import world.factors.environment.execution.api.ActiveEnvironment;
+import world.factors.expression.api.Expression;
 import world.factors.function.api.AbstractFunction;
 import world.factors.function.api.FunctionType;
 import world.factors.property.execution.PropertyInstance;
@@ -9,8 +10,8 @@ import world.factors.property.execution.PropertyInstance;
 import java.util.ArrayList;
 
 public class EnvironmentFunction extends AbstractFunction {
-    public EnvironmentFunction(FunctionType functionType, ArrayList<String> argumentTypes) {
-        super(FunctionType.ENVIRONMENT, argumentTypes, 1);
+    public EnvironmentFunction(ArrayList<Expression> args) {
+        super(FunctionType.ENVIRONMENT, args, 1);
     }
 
     @Override

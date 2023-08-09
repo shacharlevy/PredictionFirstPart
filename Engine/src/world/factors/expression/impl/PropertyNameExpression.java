@@ -1,4 +1,6 @@
 package world.factors.expression.impl;
 
-public class PropertyNameExpression {
+import world.factors.expression.api.AbstractExpression;
+
+public class PropertyNameExpression extends AbstractExpression {
 }

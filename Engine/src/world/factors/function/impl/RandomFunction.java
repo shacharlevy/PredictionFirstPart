@@ -1,14 +1,15 @@
 package world.factors.function.impl;
 
 import context.Context;
+import world.factors.expression.api.Expression;
 import world.factors.function.api.AbstractFunction;
 import world.factors.function.api.FunctionType;
 
 import java.util.ArrayList;
 
 public class RandomFunction extends AbstractFunction {
-    public RandomFunction(FunctionType functionType, ArrayList<String> argumentTypes) {
-        super(FunctionType.RANDOM, argumentTypes, 1);
+    public RandomFunction(ArrayList<Expression> args) {
+        super(FunctionType.RANDOM, args, 1);
     }
 
     @Override
