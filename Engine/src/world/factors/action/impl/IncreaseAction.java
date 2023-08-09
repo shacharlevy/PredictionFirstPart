@@ -24,35 +24,29 @@ public class IncreaseAction extends AbstractAction {
         PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(property);
 
         if (verifyDecimalPropertyType(propertyInstance)) {
+            /*forum question:
+            * As part of calculation operations calculation \ increase \ decrease
+            * what do we do in case the result of the operation is real and the PropertyType is an integer?
+            * Answer:
+            * In this case, of course, it is not possible to insert a real number into an integer, so it will be considered an error.
+            * But if it was the other way around (for example an increase operation with a by of 3 for a property that is real)
+            *  - of course it makes sense to allow since a real number can deal with an integer...*/
             Integer v = PropertyType.DECIMAL.convert(propertyInstance.getValue());
-
+            // if the string byExpression is a real number (for example 3.5) then throw an exception
+            if (byExpression.contains(".")) {
+                throw new IllegalArgumentException("increase action of a real number can't operate on an integer property [" + property + "]");
+            }
             propertyInstance.updateValue(v + this.byExpression);
-            return;
         }
 
         else if (verifyFloatPropertyType(propertyInstance)) {
             Float v = PropertyType.FLOAT.convert(propertyInstance.getValue());
             propertyInstance.updateValue(v + this.byExpression);
-            return;
         }
 
         else {
             throw new IllegalArgumentException("increase action can't operate on a none number property [" + property + "]");
         }
-
-
-
-
-        if (!verifyNumericPropertyType(propertyInstance)) {
-            throw new IllegalArgumentException("increase action can't operate on a none number property [" + property + "]");
-        }
-        if (PropertyType.DECIMAL.equals(propertyInstance.getPropertyDefinition().getType())) {
-            throw new IllegalArgumentException("increase action can't operate on a none number property [" + property + "]");
-        }
-        Integer v = PropertyType.DECIMAL.convert(propertyInstance.getValue());
-
-        // updating result on the property
-        propertyInstance.updateValue(v + this.byExpression);
     }
 
     private boolean verifyDecimalPropertyType(PropertyInstance propertyValue) {
