@@ -1,5 +1,6 @@
 package ui;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -38,7 +39,14 @@ public class PredictionConsuleUI {
                 case LOAD_WORLD_XML:
                     System.out.println(this.mainMenu.getMenuItemInstructions(userChoice.ordinal()));
                     this.currentLoadedPathString = scanner.next();
-                    loadXML(this.currentLoadedPathString);
+                    try {
+                        loadXML(this.currentLoadedPathString);
+                    } catch (FileNotFoundException e) {
+                        System.out.println("Error loading XML file: " + e.getMessage());
+                    } catch (Exception e) {
+                        System.out.println("Error loading XML file: " + e.getMessage());
+                    }
+
                     break;
                 case SHOW_SIMULATION_DETAILS:
                     System.out.println("Current loaded path: " + this.currentLoadedPathString);
