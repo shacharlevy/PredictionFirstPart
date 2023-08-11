@@ -1,6 +1,7 @@
 package world.factors.property.execution;
 
 import world.factors.property.definition.api.PropertyDefinition;
+import world.factors.property.definition.api.PropertyType;
 
 public class PropertyInstanceImpl implements PropertyInstance {
 
@@ -27,5 +28,8 @@ public class PropertyInstanceImpl implements PropertyInstance {
         this.value = val;
     }
 
-
+    @Override
+    public PropertyType getType() {
+        return propertyDefinition.getType();
+    }
 }

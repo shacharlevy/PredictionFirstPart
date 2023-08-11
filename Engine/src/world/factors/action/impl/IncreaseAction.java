@@ -23,7 +23,7 @@ public class IncreaseAction extends AbstractAction {
     public void invoke(Context context) {
         PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(property);
 
-        if (verifyDecimalPropertyType(propertyInstance)) {
+        if (propertyInstance.getType() == PropertyType.DECIMAL) {
             /*forum question:
             * As part of calculation operations calculation \ increase \ decrease
             * what do we do in case the result of the operation is real and the PropertyType is an integer?
@@ -36,24 +36,16 @@ public class IncreaseAction extends AbstractAction {
             if (byExpression.contains(".")) {
                 throw new IllegalArgumentException("increase action of a real number can't operate on an integer property [" + property + "]");
             }
-            propertyInstance.updateValue(v + this.byExpression);
+            propertyInstance.updateValue(v + Integer.parseInt(this.byExpression));
         }
 
-        else if (verifyFloatPropertyType(propertyInstance)) {
+        else if (propertyInstance.getType() == PropertyType.FLOAT) {
             Float v = PropertyType.FLOAT.convert(propertyInstance.getValue());
-            propertyInstance.updateValue(v + this.byExpression);
+            propertyInstance.updateValue(v + Float.parseFloat(this.byExpression));
         }
 
         else {
             throw new IllegalArgumentException("increase action can't operate on a none number property [" + property + "]");
         }
-    }
-
-    private boolean verifyDecimalPropertyType(PropertyInstance propertyValue) {
-        return PropertyType.DECIMAL.equals(propertyValue.getPropertyDefinition().getType());
-    }
-
-    private boolean verifyFloatPropertyType(PropertyInstance propertyValue) {
-        return PropertyType.FLOAT.equals(propertyValue.getPropertyDefinition().getType());
     }
 }
