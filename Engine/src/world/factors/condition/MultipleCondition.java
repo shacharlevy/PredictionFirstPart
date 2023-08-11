@@ -12,9 +12,23 @@ public class MultipleCondition implements Condition{
         this.logical = logical;
         this.singleConditions = singleConditions;
     }
-
     @Override
     public boolean assertCondition(Context context) {
+        switch (this.logical){
+            case AND:
+                for (SingleCondition singleCondition : singleConditions) {
+                    if (!singleCondition.assertCondition(context))
+                        return false;
+                }
+                return true;
+            case OR:
+                for (SingleCondition singleCondition : singleConditions) {
+                    if (singleCondition.assertCondition(context))
+                        return true;
+                }
+                return false;
+        }
         return false;
     }
+
 }

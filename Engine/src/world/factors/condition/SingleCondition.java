@@ -38,21 +38,25 @@ public class SingleCondition implements Condition{
 
     @Override
     public boolean assertCondition(Context context) {
-        PropertyInstance propertyInstance = context.getPropertyByName(this.entityDefinition.getName());
-
-
+        Object propertyValue = context.getPropertyByName(this.entityDefinition.getName()).getValue();
+        Object value = context.getValueByExpression(this.value);
+        // check if the property value is the same type as the value
+        if (propertyValue.getClass() != value.getClass())
+            return false;
         switch (this.operator){
             case EQUALS:
-
-                break;
+                return propertyValue.equals(value);
             case NOT_EQUALS:
-                break;
+                return !propertyValue.equals(value);
             case BIGGER_THAN:
+                if (propertyValue instanceof Number && value instanceof Number)
+                    return ((Number) propertyValue).doubleValue() > ((Number) value).doubleValue();
                 break;
             case LOWER_THAN:
+                if (propertyValue instanceof Number && value instanceof Number)
+                    return ((Number) propertyValue).doubleValue() < ((Number) value).doubleValue();
                 break;
-            default:
-
         }
+        return false;
     }
 }

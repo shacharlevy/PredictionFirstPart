@@ -23,6 +23,6 @@ public class EnvironmentFunction extends AbstractFunction {
         if (propertyInstance == null) {
             throw new IllegalArgumentException("environment variable [" + name + "] is not exist");
         }
-        return propertyInstance;
+        return propertyInstance.getValue();
     }
 }

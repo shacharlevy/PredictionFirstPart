@@ -156,4 +156,17 @@ public class ContextImpl implements Context {
                 throw new IllegalArgumentException("expression type [" + expression.getExpressionType() + "] is not exist");
         }
     }
+
+    @Override
+    public void setPropertyValue(String name, String property, Object evaluate) {
+        EntityInstance entityInstance = entityInstanceManager.getEntityInstanceByName(name);
+        if (entityInstance == null) {
+            throw new IllegalArgumentException("entity [" + name + "] is not exist");
+        }
+        // check if entity instance property type is the same as evaluate type
+        if (!entityInstance.getPropertyByName(property).getType().equals(evaluate.getClass())) {
+            throw new IllegalArgumentException("property [" + property + "] type is not the same as evaluate type");
+        }
+        entityInstance.getPropertyByName(property).updateValue(evaluate);
+    }
 }

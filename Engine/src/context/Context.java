@@ -21,4 +21,6 @@ public interface Context {
 
     PropertyInstance getPropertyByName(String expression);
     Object getValueByExpression(Expression expression);
+
+    void setPropertyValue(String name, String property, Object evaluate);
 }
