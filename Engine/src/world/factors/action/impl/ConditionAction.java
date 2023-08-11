@@ -1,4 +1,7 @@
 package world.factors.action.impl;
 
-public class ConditionAction {
+import world.factors.action.api.AbstractAction;
+
+public class ConditionAction extends AbstractAction {
+
 }

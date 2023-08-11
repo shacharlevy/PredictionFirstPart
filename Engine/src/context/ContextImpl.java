@@ -1,5 +1,6 @@
 package context;
 
+import world.factors.entity.definition.EntityDefinition;
 import world.factors.entity.execution.EntityInstance;
 import world.factors.entity.execution.manager.EntityInstanceManager;
 import world.factors.environment.execution.api.ActiveEnvironment;
@@ -10,6 +11,8 @@ import world.factors.expression.impl.PropertyNameExpression;
 import world.factors.expression.impl.UtilFunctionExpression;
 import world.factors.function.api.Function;
 import world.factors.function.api.FunctionType;
+import world.factors.function.impl.EnvironmentFunction;
+import world.factors.function.impl.RandomFunction;
 import world.factors.property.execution.PropertyInstance;
 
 import java.util.ArrayList;
@@ -83,17 +86,16 @@ public class ContextImpl implements Context {
         String functionName = expression.substring(0, expression.indexOf("("));
         return FunctionType.getFunctionType(functionName);
     }
-    private Expression getExpressionByString(String expression) {
+    @Override
+    public Expression getExpressionByString(String expression) {
         if (isFunctionExpression(expression)) {
-            Function function = getFunctionByExpression(expression);
-            return new UtilFunctionExpression(expression, function, this);
+            return new UtilFunctionExpression(expression, this);
         }
-        //TODO: check the structure od property expression
         else if (primaryEntityInstance.getPropertyByName(expression) == null) {
-            return new PropertyNameExpression();
+            return new PropertyNameExpression(expression, this);
         }
         else {
-            return new FreeValueExpression();
+            return new FreeValueExpression(expression, this);
         }
     }
     @Override
@@ -103,33 +105,55 @@ public class ContextImpl implements Context {
         // so we need to extract the function name and the arguments
         List<String> elements = splitExpressionString(functionExpression);
         List<Expression> args = new ArrayList<>();
-        for (String element : elements) {
-            args.add(getExpression(element)));
+        for (int i = 1; i < elements.size(); i++) {
+            args.add(getExpressionByString(elements.get(i)));
         }
         switch(FunctionType.getFunctionType(elements.get(0))) {
             case ENVIRONMENT:
                 if (elements.size() != 2) {
                 throw new IllegalArgumentException("environment function must have only one argument");
-            }
-            if (activeEnvironment.getProperty(elements.get(1)) == null) {
-                throw new IllegalArgumentException("environment function argument must be a valid environment property");
-            }
-            args.add(
-                return new world.factors.function.impl.EnvironmentFunction((ArrayList<String>) elements);
+                }
+                if (activeEnvironment.getProperty(elements.get(1)) == null) {
+                   throw new IllegalArgumentException("environment function argument must be a valid environment property");
+                }
+                return new EnvironmentFunction(args);
             case RANDOM:
-                return new world.factors.function.impl.RandomFunction((ArrayList<String>) elements);
+                if (elements.size() != 2) {
+                    throw new IllegalArgumentException("random function must have only one argument");
+                }
+                return new RandomFunction(args);
+            default:
+                throw new IllegalArgumentException("function [" + elements.get(0) + "] is not exist");
         }
-
     }
     public static List<String> splitExpressionString(String expression) {
         List<String> elements = new ArrayList<>();
         Pattern pattern = Pattern.compile("\\w+\\([^()]*\\)");
-        Matcher matcher = pattern.matcher(inputString);
+        Matcher matcher = pattern.matcher(expression);
 
         while (matcher.find()) {
             elements.add(matcher.group());
         }
 
         return elements;
+    }
+
+    @Override
+    public PropertyInstance getPropertyByName(String expression) {
+        return primaryEntityInstance.getPropertyByName(expression);
+    }
+
+    @Override
+    public Object getValueByExpression(Expression expression) {
+        switch (expression.getExpressionType()) {
+            case UTIL_FUNCTION:
+                return ((Function)expression.evaluate(this)).execute(this);
+            case PROPERTY_NAME:
+                return ((PropertyInstance)expression.evaluate(this)).getValue();
+            case FREE_VALUE:
+                return expression.evaluate(this);
+            default:
+                throw new IllegalArgumentException("expression type [" + expression.getExpressionType() + "] is not exist");
+        }
     }
 }

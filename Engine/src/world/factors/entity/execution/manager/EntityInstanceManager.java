@@ -10,6 +10,7 @@ public interface EntityInstanceManager {
 
     EntityInstance create(EntityDefinition entityDefinition);
     List<EntityInstance> getInstances();
+    EntityInstance getEntityInstanceByName(String entityName);
 
     void killEntity(int id);
 }

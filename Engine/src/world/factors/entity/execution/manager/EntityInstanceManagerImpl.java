@@ -38,9 +38,20 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         return newEntityInstance;
     }
 
+
     @Override
     public List<EntityInstance> getInstances() {
         return instances;
+    }
+
+    @Override
+    public EntityInstance getEntityInstanceByName(String entityName) {
+        for (EntityInstance entityInstance : instances) {
+            if (entityInstance.getEntityDefinition().getName().equals(entityName)) {
+                return entityInstance;
+            }
+        }
+        return null;
     }
 
     @Override
