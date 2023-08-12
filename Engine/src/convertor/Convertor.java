@@ -24,6 +24,7 @@ import world.factors.property.definition.impl.env.StringEnvPropertyDefinition;
 import world.factors.rule.Activation;
 import world.factors.rule.Rule;
 import world.factors.rule.RuleImpl;
+import world.factors.termination.Termination;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -142,6 +143,21 @@ public class Convertor {
 
     }
 
+    private Termination getTermination() {
+        Termination termination = new Termination();
+        List<Object> terminationList = generatedWorld.getPRDTermination().getPRDByTicksOrPRDBySecond();
+        for (Object terminationObject: terminationList) {
+            if (terminationObject instanceof PRDByTicks) {
+                termination.setTicksCount(((PRDByTicks) terminationObject).getCount());
+            } else if (terminationObject instanceof PRDBySecond) {
+                termination.setSecondsCount(((PRDBySecond) terminationObject).getCount());
+            } else {
+                throw new RuntimeException("Unknown termination type: " + terminationObject.getClass());
+            }
+        }
+        return termination;
+    }
+
     public void setGeneratedWorld(PRDWorld generatedWorld) {
         this.generatedWorld = generatedWorld;
     }
@@ -150,6 +166,6 @@ public class Convertor {
         EnvVariablesManager environment = getEnvironment();
         List<EntityDefinition> entities = getEntities();
         List<Rule> rules = getRules();
-
+        Termination termination = getTermination();
     }
 }
