@@ -10,4 +10,5 @@ public interface EntityDefinition {
     int getPopulation();
     void addProperty(EntityPropertyDefinition propertyDefinition);
     List<EntityPropertyDefinition> getProps();
+    EntityPropertyDefinition getPropertyDefinitionByName(String name);
 }

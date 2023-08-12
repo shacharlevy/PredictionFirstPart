@@ -37,4 +37,14 @@ public class EntityDefinitionImpl implements EntityDefinition {
     public List<EntityPropertyDefinition> getProps() {
         return properties;
     }
+
+    @Override
+    public EntityPropertyDefinition getPropertyDefinitionByName(String name) {
+        for (EntityPropertyDefinition propertyDefinition : properties) {
+            if (propertyDefinition.getName().equals(name)) {
+                return propertyDefinition;
+            }
+        }
+        return null;
+    }
 }

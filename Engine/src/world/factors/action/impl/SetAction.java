@@ -8,9 +8,9 @@ import world.factors.expression.api.Expression;
 
 public class SetAction extends AbstractAction {
     private final String property;
-    private final Expression value;
+    private final String value;
 
-    public SetAction(EntityDefinition entityDefinition, String property, Expression value) {
+    public SetAction(EntityDefinition entityDefinition, String property, String value) {
         super(ActionType.SET, entityDefinition);
         this.property = property;
         this.value = value;
@@ -18,6 +18,6 @@ public class SetAction extends AbstractAction {
 
     @Override
     public void invoke(Context context) {
-        context.setPropertyValue(this.entityDefinition.getName(), this.property, this.value.evaluate(context));
+        context.setPropertyValue(this.entityDefinition.getName(), this.property, this.value);
     }
 }

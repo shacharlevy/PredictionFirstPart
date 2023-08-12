@@ -9,9 +9,9 @@ import world.factors.entity.definition.EntityDefinition;
 import java.util.List;
 
 public class ConditionAction extends AbstractAction {
-    Condition condition;
-    List<AbstractAction> thenActions;
-    List<AbstractAction> elseActions;
+    private Condition condition;
+    private List<AbstractAction> thenActions;
+    private List<AbstractAction> elseActions;
 
     public ConditionAction(EntityDefinition entityDefinition, Condition condition, List<AbstractAction> thenActions, List<AbstractAction> elseActions) {
         super(ActionType.CONDITION, entityDefinition);

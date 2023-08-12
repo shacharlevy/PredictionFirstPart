@@ -1,9 +1,21 @@
 package validator;
 
+import context.Context;
 import resources.schema.generatedWorld.*;
+import world.World;
+import world.factors.action.api.Action;
+import world.factors.action.api.ActionType;
+import world.factors.action.impl.CalculationAction;
+import world.factors.action.impl.DecreaseAction;
+import world.factors.action.impl.IncreaseAction;
+import world.factors.expression.api.Expression;
+import world.factors.rule.Rule;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
+import java.util.List;
+
+import static world.factors.expression.api.AbstractExpression.getExpressionByString;
 
 public class XMLValidator {
     public static void validateFileExists(Path file) throws FileNotFoundException {
@@ -119,7 +131,41 @@ public class XMLValidator {
         return false;
     }
 
-
+    //6
+    public static void validateMathActionHasNumericArgs(List<Rule> rules) {
+        for (Rule rule : rules) {
+            for (Action action : rule.getActionsToPerform()) {
+                ActionType actionType = action.getActionType();
+                switch (actionType) {
+                    case INCREASE:
+                        IncreaseAction increaseAction = (IncreaseAction) action;
+                        String byExpression = increaseAction.getByExpression();
+                        Expression expression = getExpressionByString(byExpression);
+                        if (!(expression.evaluate(context) instanceof Number)) {
+                            throw new IllegalArgumentException("Increase action has non-numeric argument");
+                        }
+                    case DECREASE:
+                        DecreaseAction decreaseAction = (DecreaseAction) action;
+                        String byExpression2 = decreaseAction.getByExpression();
+                        Expression expression2 = getExpressionByString(byExpression2);
+                        if (!(expression2.evaluate(context) instanceof Number)) {
+                            throw new IllegalArgumentException("Decrease action has non-numeric argument");
+                        }
+                    case CALCULATION:
+                        CalculationAction calculationAction = (CalculationAction) action;
+                        String argument1 = calculationAction.getArgument1();
+                        String argument2 = calculationAction.getArgument2();
+                        Expression arg1Expression = getExpressionByString(argument1);
+                        Expression arg2Expression = getExpressionByString(argument2);
+                        if (!(arg1Expression.evaluate(context) instanceof Number) || !(arg2Expression.evaluate(context) instanceof Number)) {
+                            throw new IllegalArgumentException("Calculation action has non-numeric argument");
+                        }
+                    default:
+                        break;
+                }
+            }
+        }
+    }
 
 
 }

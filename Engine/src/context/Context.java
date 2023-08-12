@@ -15,12 +15,12 @@ public interface Context {
     ActiveEnvironment getEnvironment();
     ExpressionType getExpressionType(String expression);
     FunctionType getFunctionType(String expression);
-    Expression getExpressionByString(String expression)
+    Expression getExpressionByString(String expression);
 
     Function getFunctionByExpression(String expression);
 
     PropertyInstance getPropertyByName(String expression);
     Object getValueByExpression(Expression expression);
 
-    void setPropertyValue(String name, String property, Object evaluate);
+    void setPropertyValue(String name, String property, String value);
 }

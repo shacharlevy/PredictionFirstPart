@@ -10,9 +10,9 @@ public class SingleCondition implements Condition{
     private final EntityDefinition entityDefinition;
     private final EntityPropertyDefinition propertyDefinition;
     private final OperatorType operator;
-    private final Expression value;
+    private final String value;
 
-    public SingleCondition(EntityDefinition entityDefinition, EntityPropertyDefinition propertyDefinition, OperatorType operator, Expression value)
+    public SingleCondition(EntityDefinition entityDefinition, EntityPropertyDefinition propertyDefinition, OperatorType operator, String value)
     {
         this.entityDefinition = entityDefinition;
         this.propertyDefinition = propertyDefinition;
@@ -28,7 +28,7 @@ public class SingleCondition implements Condition{
         return propertyDefinition;
     }
 
-    public Expression getValue() {
+    public String getValue() {
         return value;
     }
 
@@ -39,7 +39,8 @@ public class SingleCondition implements Condition{
     @Override
     public boolean assertCondition(Context context) {
         Object propertyValue = context.getPropertyByName(this.entityDefinition.getName()).getValue();
-        Object value = context.getValueByExpression(this.value);
+        Expression expression = context.getExpressionByString(this.value);
+        Object value = context.getValueByExpression(expression);
         // check if the property value is the same type as the value
         if (propertyValue.getClass() != value.getClass())
             return false;

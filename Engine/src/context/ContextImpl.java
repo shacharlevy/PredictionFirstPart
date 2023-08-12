@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static world.factors.expression.api.AbstractExpression.isFunctionExpression;
+
 public class ContextImpl implements Context {
 
     private EntityInstance primaryEntityInstance;
@@ -60,17 +62,6 @@ public class ContextImpl implements Context {
         }
         return ExpressionType.FREE_VALUE;
     }
-    //TODO: move to validator later
-    private boolean isFunctionExpression(String expression) {
-        if (expression.charAt(expression.length() - 1) != ')') {
-            return false;
-        }
-        int firstOpenParenthesis = expression.indexOf('(');
-        if (firstOpenParenthesis == -1) {
-            return false;
-        }
-        return true;
-    }
 
     private boolean isPropertyName(String expression) {
         try {
@@ -81,23 +72,6 @@ public class ContextImpl implements Context {
         return true;
     }
 
-    @Override
-    public FunctionType getFunctionType(String expression) {
-        String functionName = expression.substring(0, expression.indexOf("("));
-        return FunctionType.getFunctionType(functionName);
-    }
-    @Override
-    public Expression getExpressionByString(String expression) {
-        if (isFunctionExpression(expression)) {
-            return new UtilFunctionExpression(expression, this);
-        }
-        else if (primaryEntityInstance.getPropertyByName(expression) == null) {
-            return new PropertyNameExpression(expression, this);
-        }
-        else {
-            return new FreeValueExpression(expression, this);
-        }
-    }
     @Override
     public Function getFunctionByExpression(String functionExpression) {
         // this function receives only function expression
@@ -158,15 +132,17 @@ public class ContextImpl implements Context {
     }
 
     @Override
-    public void setPropertyValue(String name, String property, Object evaluate) {
+    public void setPropertyValue(String name, String property, String value) {
+        Expression expression = getExpressionByString(value);
+        Object evaluateValue = expression.evaluate(this);
         EntityInstance entityInstance = entityInstanceManager.getEntityInstanceByName(name);
         if (entityInstance == null) {
             throw new IllegalArgumentException("entity [" + name + "] is not exist");
         }
         // check if entity instance property type is the same as evaluate type
-        if (!entityInstance.getPropertyByName(property).getType().equals(evaluate.getClass())) {
+        if (!entityInstance.getPropertyByName(property).getType().equals(evaluateValue.getClass())) {
             throw new IllegalArgumentException("property [" + property + "] type is not the same as evaluate type");
         }
-        entityInstance.getPropertyByName(property).updateValue(evaluate);
+        entityInstance.getPropertyByName(property).updateValue(evaluateValue);
     }
 }

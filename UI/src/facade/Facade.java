@@ -1,5 +1,8 @@
 package facade;
 
+import context.Context;
+import context.ContextImpl;
+import convertor.Convertor;
 import resources.schema.generatedWorld.PRDWorld;
 import static validator.XMLValidator.*;
 import world.World;
@@ -20,7 +23,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Facade {
-    World world = new World();
+    World world;
+    Convertor convertor;
+
+    public Facade() {
+        this.world = null;
+        this.convertor = new Convertor();
+    }
+
     private static PRDWorld fromXmlFileToObject(Path path) {
         try {
             File file = new File(path.toString());
@@ -37,12 +47,14 @@ public class Facade {
         return null;
     }
 
-    public static void loadXML(String path) throws FileNotFoundException {
+    public void loadXML(String path) throws FileNotFoundException {
         Path xmlPath = Paths.get(path);
         validateFileExists(xmlPath);
         validateFileIsXML(xmlPath);
         PRDWorld generatedWorld = fromXmlFileToObject(xmlPath);
         validateXMLContent(generatedWorld);
+        this.convertor.setGeneratedWorld(generatedWorld);
+        this.world = convertor.convertPRDWorldToWorld();
 
     }
 

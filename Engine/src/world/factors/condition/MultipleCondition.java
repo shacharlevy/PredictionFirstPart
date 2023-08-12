@@ -6,24 +6,24 @@ import java.util.List;
 
 public class MultipleCondition implements Condition{
     private final LogicalType logical;
-    private final List<SingleCondition> singleConditions;
+    private final List<Condition> conditions;
 
-    public MultipleCondition(LogicalType logical, List<SingleCondition> singleConditions) {
+    public MultipleCondition(LogicalType logical, List<Condition> conditions) {
         this.logical = logical;
-        this.singleConditions = singleConditions;
+        this.conditions = conditions;
     }
     @Override
     public boolean assertCondition(Context context) {
         switch (this.logical){
             case AND:
-                for (SingleCondition singleCondition : singleConditions) {
-                    if (!singleCondition.assertCondition(context))
+                for (Condition condition : conditions) {
+                    if (!condition.assertCondition(context))
                         return false;
                 }
                 return true;
             case OR:
-                for (SingleCondition singleCondition : singleConditions) {
-                    if (singleCondition.assertCondition(context))
+                for (Condition condition : conditions) {
+                    if (condition.assertCondition(context))
                         return true;
                 }
                 return false;

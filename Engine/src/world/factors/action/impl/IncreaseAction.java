@@ -19,6 +19,14 @@ public class IncreaseAction extends AbstractAction {
         this.byExpression = byExpression;
     }
 
+    public String getProperty() {
+        return property;
+    }
+
+    public String getByExpression() {
+        return byExpression;
+    }
+
     @Override
     public void invoke(Context context) {
         PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(property);

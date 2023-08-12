@@ -16,11 +16,19 @@ public class CalculationAction extends AbstractAction {
     private final String argument1;
     private final String argument2;
     private final CalculationOperator operator;
-    private enum CalculationOperator {
+    public enum CalculationOperator {
         MULTIPLY, DIVIDE
     }
 
-    public CalculationAction(ActionType actionType, EntityDefinition entityDefinition, String resultProperty, String argument1, String argument2, CalculationOperator operator) {
+    public String getArgument1() {
+        return argument1;
+    }
+
+    public String getArgument2() {
+        return argument2;
+    }
+
+    public CalculationAction(EntityDefinition entityDefinition, String resultProperty, String argument1, String argument2, CalculationOperator operator) {
         super(ActionType.CALCULATION, entityDefinition);
         this.resultProperty = resultProperty;
         this.argument1 = argument1;

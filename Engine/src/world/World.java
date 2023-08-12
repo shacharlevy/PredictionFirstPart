@@ -12,10 +12,27 @@ public class World {
     private List<EntityDefinition> entities;
     private List<Rule> rules;
     private Termination termination;
-    World(EnvVariablesManager environment, List<EntityDefinition> entities, List<Rule> rules, Termination termination) {
+
+    public World(EnvVariablesManager environment, List<EntityDefinition> entities, List<Rule> rules, Termination termination) {
         this.environment = environment;
         this.entities = entities;
         this.rules = rules;
         this.termination = termination;
+    }
+
+    public EnvVariablesManager getEnvironment() {
+        return environment;
+    }
+
+    public List<EntityDefinition> getEntities() {
+        return entities;
+    }
+
+    public List<Rule> getRules() {
+        return rules;
+    }
+
+    public Termination getTermination() {
+        return termination;
     }
 }
