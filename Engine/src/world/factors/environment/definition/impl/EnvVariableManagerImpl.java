@@ -4,6 +4,7 @@ import world.factors.environment.execution.api.ActiveEnvironment;
 import world.factors.environment.definition.api.EnvVariablesManager;
 import world.factors.property.definition.api.PropertyDefinition;
 import world.factors.environment.execution.impl.ActiveEnvironmentImpl;
+import world.factors.property.definition.api.PropertyType;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,5 +31,11 @@ public class EnvVariableManagerImpl implements EnvVariablesManager {
     @Override
     public Collection<PropertyDefinition> getEnvVariables() {
         return propNameToPropDefinition.values();
+    }
+
+    @Override
+    public boolean isNumericProperty(String propertyName) {
+        return propNameToPropDefinition.get(propertyName).getType() == PropertyType.FLOAT ||
+                propNameToPropDefinition.get(propertyName).getType() == PropertyType.DECIMAL;
     }
 }

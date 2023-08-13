@@ -1,8 +1,10 @@
 package world.factors.function.impl;
 
 import context.Context;
+import world.factors.environment.definition.api.EnvVariablesManager;
 import world.factors.environment.execution.api.ActiveEnvironment;
 import world.factors.expression.api.Expression;
+import world.factors.expression.impl.FreeValueExpression;
 import world.factors.function.api.AbstractFunction;
 import world.factors.function.api.FunctionType;
 import world.factors.property.execution.PropertyInstance;
@@ -24,5 +26,14 @@ public class EnvironmentFunction extends AbstractFunction {
             throw new IllegalArgumentException("environment variable [" + name + "] is not exist");
         }
         return propertyInstance.getValue();
+    }
+
+    @Override
+    public boolean isNumericFunction(EnvVariablesManager envVariablesManager) {
+        try {
+            return envVariablesManager.isNumericProperty(((FreeValueExpression)this.expressions.get(0)).getStringExpression());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("environment variable [" + ((FreeValueExpression)this.expressions.get(0)).getStringExpression() + "] is not exist");
+        }
     }
 }
