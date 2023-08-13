@@ -4,6 +4,7 @@ import world.factors.entity.definition.EntityDefinition;
 import world.factors.entity.execution.EntityInstance;
 import world.factors.entity.execution.manager.EntityInstanceManager;
 import world.factors.environment.execution.api.ActiveEnvironment;
+import world.factors.expression.api.AbstractExpression;
 import world.factors.expression.api.Expression;
 import world.factors.expression.api.ExpressionType;
 import world.factors.expression.impl.FreeValueExpression;
@@ -71,7 +72,7 @@ public class ContextImpl implements Context {
         }
         return true;
     }
-
+/*
     @Override
     public Function getFunctionByExpression(String functionExpression) {
         // this function receives only function expression
@@ -100,6 +101,8 @@ public class ContextImpl implements Context {
                 throw new IllegalArgumentException("function [" + elements.get(0) + "] is not exist");
         }
     }
+
+ */
     public static List<String> splitExpressionString(String expression) {
         List<String> elements = new ArrayList<>();
         Pattern pattern = Pattern.compile("\\w+\\([^()]*\\)");
@@ -123,7 +126,8 @@ public class ContextImpl implements Context {
             case UTIL_FUNCTION:
                 return ((Function)expression.evaluate(this)).execute(this);
             case PROPERTY_NAME:
-                return ((PropertyInstance)expression.evaluate(this)).getValue();
+                PropertyInstance propertyInstance = primaryEntityInstance.getPropertyByName(expression.getStringExpression());
+                return propertyInstance.getValue();
             case FREE_VALUE:
                 return expression.evaluate(this);
             default:
@@ -133,7 +137,7 @@ public class ContextImpl implements Context {
 
     @Override
     public void setPropertyValue(String name, String property, String value) {
-        Expression expression = getExpressionByString(value);
+        Expression expression = AbstractExpression.getExpressionByString(value, primaryEntityInstance.getEntityDefinition());
         Object evaluateValue = expression.evaluate(this);
         EntityInstance entityInstance = entityInstanceManager.getEntityInstanceByName(name);
         if (entityInstance == null) {

@@ -1,6 +1,7 @@
 package world.factors.function.impl;
 
 import context.Context;
+import world.factors.environment.definition.api.EnvVariablesManager;
 import world.factors.expression.api.Expression;
 import world.factors.function.api.AbstractFunction;
 import world.factors.function.api.FunctionType;
@@ -21,5 +22,10 @@ public class RandomFunction extends AbstractFunction {
             throw new IllegalArgumentException("argument must be a Integer");
         }
         return (int) (Math.random() * ((Integer) this.expressions.get(0).evaluate(context) + 1));
+    }
+
+    @Override
+    public boolean isNumericFunction(Object object) {
+        return true;
     }
 }

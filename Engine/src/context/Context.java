@@ -14,10 +14,8 @@ public interface Context {
     void removeEntity(EntityInstance entityInstance);
     ActiveEnvironment getEnvironment();
     ExpressionType getExpressionType(String expression);
-    FunctionType getFunctionType(String expression);
-    Expression getExpressionByString(String expression);
 
-    Function getFunctionByExpression(String expression);
+    /*Function getFunctionByExpression(String expression);*/
 
     PropertyInstance getPropertyByName(String expression);
     Object getValueByExpression(Expression expression);

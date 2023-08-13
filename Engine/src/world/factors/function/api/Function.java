@@ -9,5 +9,5 @@ public interface Function {
     FunctionType getFunctionType();
     Object execute(Context context);
     int getNumArguments();
-    boolean isNumericFunction(EnvVariablesManager envVariablesManager);
+    boolean isNumericFunction(Object object);
 }

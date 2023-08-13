@@ -9,5 +9,5 @@ public interface Rule {
     Activation getActivation();
     List<Action> getActionsToPerform();
     void addAction(Action action);
-
+    boolean isRuleActive(int currentTick);
 }

@@ -4,6 +4,7 @@ import context.Context;
 import world.factors.action.api.AbstractAction;
 import world.factors.action.api.ActionType;
 import world.factors.entity.definition.EntityDefinition;
+import world.factors.expression.api.AbstractExpression;
 import world.factors.expression.api.Expression;
 import world.factors.expression.api.ExpressionType;
 import world.factors.function.api.Function;
@@ -39,8 +40,8 @@ public class CalculationAction extends AbstractAction {
     @Override
     public void invoke(Context context) {
         PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(resultProperty);
-        Expression expr1 = context.getExpressionByString(argument1);
-        Expression expr2 = context.getExpressionByString(argument2);
+        Expression expr1 = AbstractExpression.getExpressionByString(argument1, entityDefinition);
+        Expression expr2 = AbstractExpression.getExpressionByString(argument2, entityDefinition);
         float exp1Value = PropertyType.FLOAT.convert(context.getValueByExpression(expr1));
         float exp2Value = PropertyType.FLOAT.convert(context.getValueByExpression(expr2));
         if (propertyInstance.getType() == PropertyType.DECIMAL) {

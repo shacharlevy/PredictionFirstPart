@@ -135,12 +135,27 @@ public class Convertor {
 
     private Rule getRule(PRDRule rule, List<EntityDefinition> entities) {
         String name = rule.getName();
-        Activation activation = new Activation(rule.getPRDActivation().getTicks(), rule.getPRDActivation().getProbability());
+        Activation activation = getActivation(rule);
         Rule ruleImpl = new RuleImpl(name, activation);
         for (PRDAction action: rule.getPRDActions().getPRDAction()) {
             ruleImpl.addAction(getAction(action, entities));
         }
         return ruleImpl;
+    }
+
+    private Activation getActivation(PRDRule rule) {
+        //if both, one null, or both not null
+        if (rule.getPRDActivation() == null) {
+            return new Activation();
+        } else if (rule.getPRDActivation().getTicks() != null && rule.getPRDActivation().getProbability() != null) {
+            return new Activation(rule.getPRDActivation().getTicks(), rule.getPRDActivation().getProbability());
+        } else if (rule.getPRDActivation().getTicks() != null) {
+            return new Activation(rule.getPRDActivation().getTicks());
+        } else if (rule.getPRDActivation().getProbability() != null) {
+            return new Activation(rule.getPRDActivation().getProbability());
+        } else {
+            return new Activation();
+        }
     }
 
     private Action getAction(PRDAction action, List<EntityDefinition> entities) {
@@ -178,7 +193,10 @@ public class Convertor {
     private Action getConditionAction(PRDAction action, EntityDefinition entityDefinition, List<EntityDefinition> entities) {
         Condition condition = getCondition(action.getPRDCondition(), entities);
         List<AbstractAction> thenActions = getActions(action.getPRDThen().getPRDAction(), entities);
-        List<AbstractAction> elseActions = getActions(action.getPRDElse().getPRDAction(), entities);
+        List<AbstractAction> elseActions = null;
+        if (action.getPRDElse() != null) {
+            elseActions = getActions(action.getPRDElse().getPRDAction(), entities);
+        }
         return new ConditionAction(entityDefinition, condition, thenActions, elseActions);
     }
 

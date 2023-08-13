@@ -8,6 +8,9 @@ import world.factors.action.api.ActionType;
 import world.factors.action.impl.CalculationAction;
 import world.factors.action.impl.DecreaseAction;
 import world.factors.action.impl.IncreaseAction;
+import world.factors.entity.definition.EntityDefinition;
+import world.factors.environment.definition.api.EnvVariablesManager;
+import world.factors.environment.definition.impl.EnvVariableManagerImpl;
 import world.factors.expression.api.Expression;
 import world.factors.rule.Rule;
 
@@ -25,7 +28,7 @@ public class XMLValidator {
     }
 
     public static void validateFileIsXML(Path file) {
-        if(!file.getFileName().endsWith(".xml")) {
+        if(!file.getFileName().toString().endsWith(".xml")) {
             throw new IllegalArgumentException("File is not XML");
         }
     }
@@ -110,8 +113,12 @@ public class XMLValidator {
     public static void validateAllActionsReferToExistingEntityProperties(PRDWorld world) {
         for(PRDRule rule: world.getPRDRules().getPRDRule()) {
             for(PRDAction action: rule.getPRDActions().getPRDAction()) {
-                if(!isEntityPropertyExist(world, action.getEntity(), action.getProperty())) {
+                if(action.getProperty() !=null && !isEntityPropertyExist(world, action.getEntity(), action.getProperty())) {
                     throw new IllegalArgumentException("Action refers to non-existing entity");
+                } else if (action.getResultProp() != null && !isEntityPropertyExist(world, action.getEntity(), action.getResultProp())) {
+                    throw new IllegalArgumentException("Action refers to non-existing entity");
+                } else {
+                    continue;
                 }
             }
         }
@@ -132,7 +139,7 @@ public class XMLValidator {
     }
 
     //6
-    public static void validateMathActionHasNumericArgs(List<Rule> rules) {
+    public static void validateMathActionHasNumericArgs(List<Rule> rules, List<EntityDefinition> entities, EnvVariableManagerImpl envVariableManagerImpl) {
         for (Rule rule : rules) {
             for (Action action : rule.getActionsToPerform()) {
                 ActionType actionType = action.getActionType();
@@ -140,26 +147,29 @@ public class XMLValidator {
                     case INCREASE:
                         IncreaseAction increaseAction = (IncreaseAction) action;
                         String byExpression = increaseAction.getByExpression();
-                        Expression expression = getExpressionByString(byExpression);
-                        if (!(expression.evaluate(context) instanceof Number)) {
+                        Expression expression = getExpressionByString(byExpression, entities.get(0));
+                        if (!(expression.isNumericExpression(entities, envVariableManagerImpl))) {
                             throw new IllegalArgumentException("Increase action has non-numeric argument");
                         }
+                        break;
                     case DECREASE:
                         DecreaseAction decreaseAction = (DecreaseAction) action;
                         String byExpression2 = decreaseAction.getByExpression();
-                        Expression expression2 = getExpressionByString(byExpression2);
-                        if (!(expression2.evaluate(context) instanceof Number)) {
+                        Expression expression2 = getExpressionByString(byExpression2, entities.get(0));
+                        if (!(expression2.isNumericExpression(entities, envVariableManagerImpl))) {
                             throw new IllegalArgumentException("Decrease action has non-numeric argument");
                         }
+                        break;
                     case CALCULATION:
                         CalculationAction calculationAction = (CalculationAction) action;
                         String argument1 = calculationAction.getArgument1();
                         String argument2 = calculationAction.getArgument2();
-                        Expression arg1Expression = getExpressionByString(argument1);
-                        Expression arg2Expression = getExpressionByString(argument2);
-                        if (!(arg1Expression.evaluate(context) instanceof Number) || !(arg2Expression.evaluate(context) instanceof Number)) {
+                        Expression arg1Expression = getExpressionByString(argument1, entities.get(0));
+                        Expression arg2Expression = getExpressionByString(argument2, entities.get(0));
+                        if (!(arg1Expression.isNumericExpression(entities, envVariableManagerImpl)) || !(arg2Expression.isNumericExpression(entities, envVariableManagerImpl))) {
                             throw new IllegalArgumentException("Calculation action has non-numeric argument");
                         }
+                        break;
                     default:
                         break;
                 }

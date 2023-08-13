@@ -10,14 +10,11 @@ import ui.menu.MenuItem;
 import ui.menu.MenuOptions;
 import facade.Facade;
 
-import ui.menu.MenuOptions.*;
-
-import static facade.Facade.loadXML;
-
 public class PredictionConsuleUI {
 
     private final Menu mainMenu;
     private String currentLoadedPathString;
+    private Facade facade = new Facade();
     public PredictionConsuleUI(){
         this.currentLoadedPathString = "no path loaded";
         List<MenuItem> menuItems = new ArrayList<>();
@@ -40,19 +37,21 @@ public class PredictionConsuleUI {
                     System.out.println(this.mainMenu.getMenuItemInstructions(userChoice.ordinal()));
                     this.currentLoadedPathString = scanner.next();
                     try {
-                        loadXML(this.currentLoadedPathString);
+                        this.facade.loadXML(this.currentLoadedPathString);
+                        System.out.println("XML file loaded successfully\n");
                     } catch (FileNotFoundException e) {
-                        System.out.println("Error loading XML file: " + e.getMessage());
+                        System.out.println("Error loading XML file: " + e.getMessage() + "\n");
                     } catch (Exception e) {
-                        System.out.println("Error loading XML file: " + e.getMessage());
+                        System.out.println("Error loading XML file: " + e.getMessage() + "\n");
                     }
-
                     break;
                 case SHOW_SIMULATION_DETAILS:
-                    System.out.println("Current loaded path: " + this.currentLoadedPathString);
+                    String simulationDetails = this.facade.getSimulationDetails();
+                    System.out.println(simulationDetails);
                     break;
                 case ACTIVATE_SIMULATION:
-                    System.out.println("Current loaded path: " + this.currentLoadedPathString);
+                    System.out.println("Simulation activated");
+                    this.facade.activateSimulation();
                     break;
                 case FULL_PAST_SIMULATION_DETAILS:
                     System.out.println("Current loaded path: " + this.currentLoadedPathString);

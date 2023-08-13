@@ -2,6 +2,7 @@ package world.factors.condition;
 
 import context.Context;
 import world.factors.entity.definition.EntityDefinition;
+import world.factors.expression.api.AbstractExpression;
 import world.factors.expression.api.Expression;
 import world.factors.property.definition.api.EntityPropertyDefinition;
 import world.factors.property.execution.PropertyInstance;
@@ -39,7 +40,7 @@ public class SingleCondition implements Condition{
     @Override
     public boolean assertCondition(Context context) {
         Object propertyValue = context.getPropertyByName(this.entityDefinition.getName()).getValue();
-        Expression expression = context.getExpressionByString(this.value);
+        Expression expression = AbstractExpression.getExpressionByString(this.value, this.entityDefinition);
         Object value = context.getValueByExpression(expression);
         // check if the property value is the same type as the value
         if (propertyValue.getClass() != value.getClass())

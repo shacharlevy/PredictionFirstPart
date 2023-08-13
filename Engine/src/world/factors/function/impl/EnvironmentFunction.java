@@ -28,9 +28,9 @@ public class EnvironmentFunction extends AbstractFunction {
         return propertyInstance.getValue();
     }
 
-    @Override
-    public boolean isNumericFunction(EnvVariablesManager envVariablesManager) {
+    public boolean isNumericFunction(Object object) {
         try {
+            EnvVariablesManager envVariablesManager = (EnvVariablesManager) object;
             return envVariablesManager.isNumericProperty(((FreeValueExpression)this.expressions.get(0)).getStringExpression());
         } catch (Exception e) {
             throw new IllegalArgumentException("environment variable [" + ((FreeValueExpression)this.expressions.get(0)).getStringExpression() + "] is not exist");

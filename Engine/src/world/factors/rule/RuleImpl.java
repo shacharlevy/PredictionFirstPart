@@ -36,4 +36,13 @@ public class RuleImpl implements Rule {
     public void addAction(Action action) {
         actions.add(action);
     }
+
+    @Override
+    public boolean isRuleActive(int currentTick) {
+        float random = (float) Math.random();
+        if (currentTick % activation.getTicks() == 0 && random <= activation.getProbabilty()) {
+            return true;
+        }
+        return false;
+    }
 }

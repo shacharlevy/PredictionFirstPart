@@ -2,6 +2,7 @@ package world.factors.expression.impl;
 
 import context.Context;
 import world.factors.entity.definition.EntityDefinition;
+import world.factors.environment.definition.impl.EnvVariableManagerImpl;
 import world.factors.expression.api.AbstractExpression;
 import world.factors.expression.api.ExpressionType;
 
@@ -13,7 +14,7 @@ public class FreeValueExpression extends AbstractExpression {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    public Object evaluate(Object object) {
         // if the expression is an integer, return it as an integer
          if (expression.matches("-?\\d+")) {
             return Integer.parseInt(expression);
@@ -31,7 +32,7 @@ public class FreeValueExpression extends AbstractExpression {
     }
 
     @Override
-    public boolean isNumericExpression(List<EntityDefinition> entityDefinitions) {
+    public boolean isNumericExpression(List<EntityDefinition> entityDefinitions, EnvVariableManagerImpl envVariableManagerImpl) {
         // if the expression is an integer, return it as an integer
          if (expression.matches("-?\\d+")) {
             return true;

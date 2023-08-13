@@ -24,7 +24,6 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
 
     @Override
     public EntityInstance create(EntityDefinition entityDefinition) {
-
         count++;
         EntityInstance newEntityInstance = new EntityInstanceImpl(entityDefinition, count);
         instances.add(newEntityInstance);
@@ -34,7 +33,6 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
             PropertyInstance newPropertyInstance = new PropertyInstanceImpl(entityPropertyDefinition, value);
             newEntityInstance.addPropertyInstance(newPropertyInstance);
         }
-
         return newEntityInstance;
     }
 
@@ -56,6 +54,11 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
 
     @Override
     public void killEntity(int id) {
-        // some implementation...
+        for (EntityInstance entityInstance : instances) {
+            if (entityInstance.getId() == id) {
+                instances.remove(entityInstance);
+                return;
+            }
+        }
     }
 }
