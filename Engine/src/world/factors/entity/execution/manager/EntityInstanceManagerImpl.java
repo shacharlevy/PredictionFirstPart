@@ -61,4 +61,18 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
             }
         }
     }
+
+    @Override
+    public  boolean isEntityAlive(int id)
+    {
+        for (EntityInstance entityInstance: this.instances)
+        {
+            if (entityInstance.getId() == id){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }

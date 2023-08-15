@@ -40,9 +40,7 @@ public class RuleImpl implements Rule {
     @Override
     public boolean isRuleActive(int currentTick) {
         float random = (float) Math.random();
-        if (currentTick % activation.getTicks() == 0 && random <= activation.getProbabilty()) {
-            return true;
-        }
-        return false;
+        return currentTick % activation.getTicks() == 0 && random <= activation.getProbabilty();
+
     }
 }

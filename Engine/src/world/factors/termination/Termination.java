@@ -22,4 +22,8 @@ public class Termination {
     public void setTicksCount(int ticksCount) {
         this.ticksCount = ticksCount;
     }
+
+    public boolean isRunning(int currentTick) {
+
+    }
 }
