@@ -278,6 +278,9 @@ public class Convertor {
     private Termination getTermination() {
         Termination termination = new Termination();
         List<Object> terminationList = generatedWorld.getPRDTermination().getPRDByTicksOrPRDBySecond();
+        if (terminationList.size() > 2 || terminationList.size() == 0) {
+            throw new RuntimeException("Termination must have exactly 1 or 2 termination types");
+        }
         for (Object terminationObject: terminationList) {
             if (terminationObject instanceof PRDByTicks) {
                 termination.setTicksCount(((PRDByTicks) terminationObject).getCount());

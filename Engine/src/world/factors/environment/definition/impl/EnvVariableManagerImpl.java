@@ -38,4 +38,9 @@ public class EnvVariableManagerImpl implements EnvVariablesManager {
         return propNameToPropDefinition.get(propertyName).getType() == PropertyType.FLOAT ||
                 propNameToPropDefinition.get(propertyName).getType() == PropertyType.DECIMAL;
     }
+
+    @Override
+    public PropertyDefinition getPropertyDefinitionByName(String propertyName) {
+        return propNameToPropDefinition.get(propertyName);
+    }
 }

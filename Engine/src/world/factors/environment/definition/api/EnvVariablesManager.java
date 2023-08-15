@@ -10,4 +10,5 @@ public interface EnvVariablesManager {
     ActiveEnvironment createActiveEnvironment();
     Collection<PropertyDefinition> getEnvVariables();
     boolean isNumericProperty(String propertyName);
+    PropertyDefinition getPropertyDefinitionByName(String propertyName);
 }

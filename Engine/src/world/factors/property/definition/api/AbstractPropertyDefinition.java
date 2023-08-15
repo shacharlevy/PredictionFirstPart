@@ -1,8 +1,8 @@
 package world.factors.property.definition.api;
 
 public abstract class AbstractPropertyDefinition implements PropertyDefinition{
-    private final String name;
-    private final PropertyType propertyType;
+    protected final String name;
+    protected final PropertyType propertyType;
 
     public AbstractPropertyDefinition(String name, PropertyType propertyType) {
         this.name = name;

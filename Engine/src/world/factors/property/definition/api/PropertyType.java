@@ -9,6 +9,10 @@ public enum PropertyType {
             }
             return (Integer) value;
         }
+
+        public boolean isMyType(String value) {
+            return value.matches("-?\\d+");
+        }
     }, BOOLEAN {
 
         public Boolean convert(Object value) {
@@ -16,6 +20,9 @@ public enum PropertyType {
                 throw new IllegalArgumentException("value " + value + " is not of a BOOLEAN type (expected Boolean class)");
             }
             return (Boolean) value;
+        }
+        public boolean isMyType(String value) {
+               return value.matches("true|false");
         }
     }, FLOAT {
 
@@ -25,6 +32,9 @@ public enum PropertyType {
             }
             return (Double) value;
         }
+        public boolean isMyType(String value) {
+            return value.matches("-?\\d+(\\.\\d+)?");
+        }
     }, STRING {
 
         public String convert(Object value) {
@@ -33,7 +43,11 @@ public enum PropertyType {
             }
             return (String) value;
         }
+        public boolean isMyType(String value) {
+            return true;
+        }
     };
 
     public abstract <T> T convert(Object value);
+    public abstract boolean isMyType(String value);
 }

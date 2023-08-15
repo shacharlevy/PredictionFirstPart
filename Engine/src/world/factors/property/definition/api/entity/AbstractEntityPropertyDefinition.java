@@ -17,4 +17,9 @@ public abstract class AbstractEntityPropertyDefinition<T> extends AbstractProper
     public T generateValue() {
         return valueGenerator.generateValue();
     }
+
+    @Override
+    public boolean isNumeric() {
+        return this.propertyType == PropertyType.DECIMAL || this.propertyType == PropertyType.FLOAT;
+    }
 }
