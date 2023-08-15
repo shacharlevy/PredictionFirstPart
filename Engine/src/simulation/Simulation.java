@@ -34,6 +34,35 @@ public class Simulation {
         this.entityInstanceManager = new EntityInstanceManagerImpl();
         this.id = id;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public ActiveEnvironment getActiveEnvironment() {
+        return activeEnvironment;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public EntityInstanceManager getEntityInstanceManager() {
+        return entityInstanceManager;
+    }
+
+    public boolean isTerminatedBySecondsCount() {
+        return isTerminatedBySecondsCount;
+    }
+
+    public boolean isTerminatedByTicksCount() {
+        return isTerminatedByTicksCount;
+    }
+
+    public SimpleDateFormat getStartTime() {
+        return startTime;
+    }
+
     private void initEntityInstancesArray() {
         EntityDefinition entityDefinition = world.getEntities().get(0);
         for (int i = 0; i < entityDefinition.getPopulation(); i++) {

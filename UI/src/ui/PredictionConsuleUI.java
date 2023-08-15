@@ -69,7 +69,15 @@ public class PredictionConsuleUI {
     private void activateSimulation() {
         EnvVariablesDTO envVariablesDTO = engine.getEnvVariablesDTO();
         EnvVariablesValuesDTO envVariablesValuesDTO = getEnvVariablesValuesDTOFromUser(envVariablesDTO);
-        this.engine.activateSimulation(envVariablesValuesDTO);
+        SimulationResultDTO simulationResultDTO = engine.activateSimulation(envVariablesValuesDTO);
+        System.out.println("Simulation ended");
+        System.out.println("Simulation ID: " + simulationResultDTO.getId());
+        if(simulationResultDTO.isTerminatedBySecondsCount()){
+            System.out.println("Simulation terminated by seconds count");
+        }
+        if(simulationResultDTO.isTerminatedByTicksCount()){
+            System.out.println("Simulation terminated by ticks count");
+        }
     }
 
     private EnvVariablesValuesDTO getEnvVariablesValuesDTOFromUser(EnvVariablesDTO envVariablesDTO) {
@@ -77,6 +85,7 @@ public class PredictionConsuleUI {
         for (int i = 0; i < envVariablesDTO.getEnvVariables().length; i++) {
             envVariableValueDTOS[i] = getEnvVariableValueDTOFromUser(envVariablesDTO.getEnvVariables()[i]);
         }
+        return new EnvVariablesValuesDTO(envVariableValueDTOS);
     }
 
     private EnvVariableValueDTO getEnvVariableValueDTOFromUser(EnvVariableDefinitionDTO envVariable) {
@@ -110,7 +119,7 @@ public class PredictionConsuleUI {
                 + "Type: " + envVariable.getType());
         if (!envVariable.getFromRange().equals("")) {
             System.out.println("From Range: " + envVariable.getFromRange()
-                    + "To Range: " + envVariable.getToRange() + "\n");
+                    + " To Range: " + envVariable.getToRange() + "\n");
         }
         System.out.println("--------------------------------------\n");
     }
