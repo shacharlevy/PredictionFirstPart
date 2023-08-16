@@ -54,7 +54,10 @@ public class Convertor {
         EnvVariablesManager environment = new EnvVariableManagerImpl();
         for (PRDEnvProperty envProp : generatedWorld.getPRDEvironment().getPRDEnvProperty()) {
             if (envProp.getType().equals("decimal")) {
-                environment.addEnvironmentVariable(new IntegerEnvPropertyDefinition(envProp.getPRDName(), new Range(envProp.getPRDRange().getTo(), envProp.getPRDRange().getFrom())));
+                if (!isConvertableToInteger(envProp.getPRDRange().getFrom()) || !isConvertableToInteger(envProp.getPRDRange().getTo())) {
+                    throw new RuntimeException("Range of decimal environment property must be integer");
+                }
+                environment.addEnvironmentVariable(new IntegerEnvPropertyDefinition(envProp.getPRDName(), new Range((int)envProp.getPRDRange().getTo(), (int)envProp.getPRDRange().getFrom())));
             } else if (envProp.getType().equals("float")) {
                 environment.addEnvironmentVariable(new FloatEnvPropertyDefinition(envProp.getPRDName(), new Range(envProp.getPRDRange().getTo(), envProp.getPRDRange().getFrom())));
             } else if (envProp.getType().equals("boolean")) {
@@ -66,6 +69,10 @@ public class Convertor {
             }
         }
         return environment;
+    }
+
+    private boolean isConvertableToInteger(Double value) {
+        return value == Math.floor(value);
     }
 
     private List<EntityDefinition> getEntities() {
