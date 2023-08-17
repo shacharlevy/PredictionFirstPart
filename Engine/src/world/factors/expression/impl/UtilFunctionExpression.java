@@ -77,14 +77,19 @@ public class UtilFunctionExpression extends AbstractExpression {
         }
     }
     private static List<String> splitExpressionString(String expression) {
+        // this function receives only function expression
+        // the function expression structure is: functionName(arg1,arg2,arg3,...)
+        // the return list will be: [functionName, arg1, arg2, arg3, ...]
         List<String> elements = new ArrayList<>();
-        Pattern pattern = Pattern.compile("\\w+\\([^()]*\\)");
+        Pattern pattern = Pattern.compile("([a-zA-Z]+)\\((.*)\\)");
         Matcher matcher = pattern.matcher(expression);
-
-        while (matcher.find()) {
-            elements.add(matcher.group());
+        if (matcher.find()) {
+            elements.add(matcher.group(1));
+            String[] args = matcher.group(2).split(",");
+            for (String arg : args) {
+                elements.add(arg);
+            }
         }
-
         return elements;
     }
 }

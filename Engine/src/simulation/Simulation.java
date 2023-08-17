@@ -12,6 +12,8 @@ import world.factors.rule.Rule;
 
 import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Simulation {
     private final int id;
@@ -74,7 +76,8 @@ public class Simulation {
             currentTick++;
             for (Rule rule: this.world.getRules()){
                 if (rule.isRuleActive(currentTick)){
-                    for (EntityInstance entityInstance : this.entityInstanceManager.getInstances()) {
+                    List<EntityInstance> tempEntityInstances = new ArrayList<>(this.entityInstanceManager.getInstances());
+                    for (EntityInstance entityInstance : tempEntityInstances) {
                         for (Action action: rule.getActionsToPerform()){
                             action.invoke(new ContextImpl(entityInstance, entityInstanceManager, this.activeEnvironment));
                         }

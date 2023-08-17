@@ -27,6 +27,9 @@ public class ConditionAction extends AbstractAction {
                 thenAction.invoke(context);
             }
         } else {
+            if (elseActions == null) {
+                return;
+            }
             for (AbstractAction elseAction : elseActions) {
                 elseAction.invoke(context);
             }

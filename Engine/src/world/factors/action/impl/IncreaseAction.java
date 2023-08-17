@@ -4,9 +4,13 @@ import world.factors.action.api.AbstractAction;
 import world.factors.action.api.ActionType;
 
 import world.factors.entity.definition.EntityDefinition;
+import world.factors.expression.api.Expression;
+import world.factors.expression.impl.UtilFunctionExpression;
 import world.factors.property.definition.api.PropertyType;
 import context.Context;
 import world.factors.property.execution.PropertyInstance;
+
+import static world.factors.expression.api.AbstractExpression.getExpressionByString;
 
 public class IncreaseAction extends AbstractAction {
 
@@ -30,7 +34,8 @@ public class IncreaseAction extends AbstractAction {
     @Override
     public void invoke(Context context) {
         PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(property);
-
+        Expression expression = getExpressionByString(byExpression, context.getPrimaryEntityInstance().getEntityDefinition());
+        Object value = context.getValueByExpression(expression);
         if (propertyInstance.getType() == PropertyType.DECIMAL) {
             /*forum question:
             * As part of calculation operations calculation \ increase \ decrease
@@ -41,15 +46,18 @@ public class IncreaseAction extends AbstractAction {
             *  - of course it makes sense to allow since a real number can deal with an integer...*/
             Integer v = PropertyType.DECIMAL.convert(propertyInstance.getValue());
             // if the string byExpression is a real number (for example 3.5) then throw an exception
-            if (byExpression.contains(".")) {
+            if (value instanceof Float) {
                 throw new IllegalArgumentException("increase action of a real number can't operate on an integer property [" + property + "]");
+            } else if (value instanceof Integer) {
+                propertyInstance.updateValue(v + (int)value);
             }
-            propertyInstance.updateValue(v + Integer.parseInt(this.byExpression));
         }
 
         else if (propertyInstance.getType() == PropertyType.FLOAT) {
             Float v = PropertyType.FLOAT.convert(propertyInstance.getValue());
-            propertyInstance.updateValue(v + Float.parseFloat(this.byExpression));
+            if (value instanceof Float) {
+                propertyInstance.updateValue(v + (float) value);
+            }
         }
 
         else {

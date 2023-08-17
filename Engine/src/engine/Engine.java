@@ -77,8 +77,7 @@ public class Engine {
         for (EnvVariableValueDTO envVariableValueDTO : envVariablesValuesDTO.getEnvVariablesValues()) {
             Object value = envVariableValueDTO.getValue();
             if (envVariableValueDTO.getValue().equals("")) {
-                ValueGenerator valueGenerator = createValueGenerator(envVariableValueDTO.getName());
-                value = valueGenerator.generateValue();
+                value = this.world.getEnvironment().getPropertyDefinitionByName(envVariableValueDTO.getName()).generateValue();
             }
             PropertyInstance propertyInstance = new PropertyInstanceImpl(this.world.getEnvironment().getPropertyDefinitionByName(envVariableValueDTO.getName()), value);
             activeEnvironment.addPropertyInstance(propertyInstance);
@@ -86,20 +85,6 @@ public class Engine {
         Simulation simulation = this.simulationManager.createSimulation(this.world, activeEnvironment);
         simulation.run();
         return new SimulationResultDTO(simulation.getId(), simulation.isTerminatedBySecondsCount(), simulation.isTerminatedByTicksCount());
-    }
-
-    private ValueGenerator createValueGenerator(String name) {
-        PropertyDefinition propertyDefinition = this.world.getEnvironment().getPropertyDefinitionByName(name);
-        if (propertyDefinition.getType() == PropertyType.BOOLEAN) {
-            ValueGeneratorFactory.createRandomBoolean();
-        } else if (propertyDefinition.getType() == PropertyType.DECIMAL) {
-            NumericPropertyDefinition numericPropertyDefinition = (NumericPropertyDefinition) propertyDefinition;
-            return ValueGeneratorFactory.createRandomInteger(new Range((int)numericPropertyDefinition.getRange().getFrom(), (int)numericPropertyDefinition.getRange().getTo()));
-        } else if (propertyDefinition.getType() == PropertyType.FLOAT) {
-            NumericPropertyDefinition numericPropertyDefinition = (NumericPropertyDefinition) propertyDefinition;
-            return ValueGeneratorFactory.createRandomFloat(new Range((float)numericPropertyDefinition.getRange().getFrom(), (float)numericPropertyDefinition.getRange().getTo()));
-        }
-        return ValueGeneratorFactory.createRandomString();
     }
 
     public SimulationDetailsDTO getSimulationDetailsDTO() {
