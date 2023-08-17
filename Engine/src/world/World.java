@@ -28,6 +28,15 @@ public class World {
         return entities;
     }
 
+    public EntityDefinition getEntityByName(String name) {
+        for (EntityDefinition entity : entities) {
+            if (entity.getName().equals(name)) {
+                return entity;
+            }
+        }
+        return null;
+    }
+
     public List<Rule> getRules() {
         return rules;
     }

@@ -12,7 +12,10 @@ import world.factors.rule.Rule;
 
 import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Simulation {
@@ -22,7 +25,8 @@ public class Simulation {
     private final EntityInstanceManager entityInstanceManager;
     private boolean isTerminatedBySecondsCount = false;
     private boolean isTerminatedByTicksCount = false;
-    private SimpleDateFormat startTime = new SimpleDateFormat("dd-mm-yyyy | hh.mm.ss");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy | hh.mm.ss");
+    private String formattedStartTime;
 
 
     public Simulation(ActiveEnvironment activeEnvironment, World world, int id) {
@@ -56,8 +60,8 @@ public class Simulation {
         return isTerminatedByTicksCount;
     }
 
-    public SimpleDateFormat getStartTime() {
-        return startTime;
+    public String getFormattedStartTime() {
+        return formattedStartTime;
     }
 
     private void initEntityInstancesArray() {
@@ -68,11 +72,16 @@ public class Simulation {
     }
 
     public String run() {
-        Time timer = new Time(0);
-        this.startTime.format(timer);
+        Instant start = Instant.now();
+        Date date = new Date();
+        this.formattedStartTime = this.dateFormat.format(date);
+
         initEntityInstancesArray();
         int currentTick = 0;
-        while (!this.world.getTermination().isTerminated(currentTick, timer)) {
+        Instant now = Instant.now();
+        Duration duration = Duration.between(start, now);
+        long seconds = duration.getSeconds();
+        while (!this.world.getTermination().isTerminated(currentTick, seconds)) {
             currentTick++;
             for (Rule rule: this.world.getRules()){
                 if (rule.isRuleActive(currentTick)){
@@ -84,8 +93,11 @@ public class Simulation {
                     }
                 }
             }
+            now = Instant.now();
+            duration = Duration.between(start, now);
+            seconds = duration.getSeconds();
         }
-        isTerminatedBySecondsCount = this.world.getTermination().isTerminatedBySecondsCount(timer);
+        isTerminatedBySecondsCount = this.world.getTermination().isTerminatedBySecondsCount(seconds);
         isTerminatedByTicksCount = this.world.getTermination().isTerminatedByTicksCount(currentTick);
         return "Simulation finished";
     }

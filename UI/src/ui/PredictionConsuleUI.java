@@ -3,9 +3,11 @@ package ui;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import dtos.*;
+import sun.java2d.marlin.stats.Histogram;
 import ui.menu.Menu;
 import ui.menu.MenuItem;
 import ui.menu.MenuOptions;
@@ -54,7 +56,7 @@ public class PredictionConsuleUI {
                     activateSimulation();
                     break;
                 case FULL_PAST_SIMULATION_DETAILS:
-                    System.out.println("Current loaded path: " + this.currentLoadedPathString);
+                    showFullPastSimulationDetails();
                     break;
                 case EXIT:
                     System.out.println("Goodbye!");
@@ -63,6 +65,84 @@ public class PredictionConsuleUI {
                     System.out.println("Invalid choice");
                     break;
             }
+        }
+    }
+
+    private void showFullPastSimulationDetails() {
+        SimulationIDListDTO simulationIDListDTO = engine.getSimulationListDTO();
+        if(simulationIDListDTO.getSimulationIDDTOS().length == 0){
+            System.out.println("No simulations were run yet\n");
+            return;
+        }
+        System.out.println("Simulation List:\n");
+        for (SimulationIDDTO simulationIDDTO : simulationIDListDTO.getSimulationIDDTOS()) {
+            System.out.println("Simulation ID: " + simulationIDDTO.getId() + "\n"
+                    + "Simulation Start Time: " + simulationIDDTO.getStartTime() + "\n");
+        }
+        System.out.println("Please enter the ID of the simulation you want to see:");
+        Scanner scanner = new Scanner(System.in);
+        int simulationID = scanner.nextInt();
+        while (!engine.validateSimulationID(simulationID)) {
+            System.out.println("Invalid ID, please try again: ");
+            simulationID = scanner.nextInt();
+        }
+        System.out.println("Please choose the display mode:\n"
+                + "1. Display by amount\n"
+                + "2. Display by characteristic histogram\n");
+        int displayMode = scanner.nextInt();
+        while (displayMode != 1 && displayMode != 2) {
+            System.out.println("Invalid choice, please try again: ");
+            displayMode = scanner.nextInt();
+        }
+        if (displayMode == 1) {
+            showSimulationResultByAmount(simulationID);
+        } else {
+            showSimulationResultByCharacteristicHistogram(simulationID);
+        }
+    }
+
+    private void showSimulationResultByAmount(int simulationID) {
+        SimulationResultByAmountDTO simulationResultByAmountDTO = engine.getSimulationResultByAmountDTO(simulationID);
+        System.out.println("Simulation ID: " + simulationResultByAmountDTO.getSimulationID() + "\n"
+                + "Entities:\n"
+                + "--------------------------------------");
+        for (EntityResultDTO entityResultDTO : simulationResultByAmountDTO.getEntityInstanceResults()) {
+            System.out.println("Entity Name: " + entityResultDTO.getEntityName() + "\n"
+                    + "Entity Start Population: " + entityResultDTO.getStartingPopulation() + "\n"
+                    + "Entity End Population: " + entityResultDTO.getEndingPopulation() + "\n"
+                    + "--------------------------------------");
+        }
+    }
+
+    private void showSimulationResultByCharacteristicHistogram(int simulationID) {
+        EntityDefinitionDTO[] entities = engine.getSimulationDetailsDTO().getEntities();
+        System.out.println("Please choose Entity From the list:\n");
+        for (int i = 0; i < entities.length; i++) {
+            System.out.println((i + 1) + ". " + entities[i].getName() + "\n");
+        }
+        Scanner scanner = new Scanner(System.in);
+        int entityNumber = scanner.nextInt();
+        while (entityNumber < 1 || entityNumber > entities.length) {
+            System.out.println("Invalid choice, please try again: ");
+            entityNumber = scanner.nextInt();
+        }
+        EntityDefinitionDTO entity = entities[entityNumber - 1];
+        System.out.println("Please choose Property From the list:\n");
+        for (int i = 0; i < entity.getProperties().length; i++) {
+            System.out.println((i + 1) + ". " + entity.getProperties()[i].getName() + "\n");
+        }
+        int propertyNumber = scanner.nextInt();
+        while (propertyNumber < 1 || propertyNumber > entity.getProperties().length) {
+            System.out.println("Invalid choice, please try again: ");
+            propertyNumber = scanner.nextInt();
+        }
+        EntityPropertyDefinitionDTO property = entity.getProperties()[propertyNumber - 1];
+        //display histogram that shows for each value how many instances have it
+        System.out.println("Histogram for " + entity.getName() + " " + property.getName() + ":\n");
+        HistogramDTO histogramDTO = engine.getHistogramDTO(simulationID, entity.getName(), property.getName());
+        Map<Object, Integer> histogram = histogramDTO.getHistogram();
+        for (Map.Entry<Object, Integer> entry : histogram.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
         }
     }
 

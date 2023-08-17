@@ -3,20 +3,19 @@ package engine;
 import convertor.Convertor;
 import dtos.*;
 import resources.schema.generatedWorld.PRDWorld;
+
+import static java.util.Arrays.stream;
 import static validator.XMLValidator.*;
 
 import simulation.Simulation;
 import simulation.SimulationManager;
-import value.generator.api.ValueGenerator;
-import value.generator.api.ValueGeneratorFactory;
 import world.World;
 import world.factors.entity.definition.EntityDefinition;
+import world.factors.entity.execution.EntityInstance;
 import world.factors.environment.definition.impl.EnvVariableManagerImpl;
 import world.factors.environment.execution.api.ActiveEnvironment;
 import world.factors.property.definition.api.NumericPropertyDefinition;
 import world.factors.property.definition.api.PropertyDefinition;
-import world.factors.property.definition.api.PropertyType;
-import world.factors.property.definition.api.Range;
 import world.factors.property.execution.PropertyInstance;
 import world.factors.property.execution.PropertyInstanceImpl;
 import world.factors.rule.Rule;
@@ -30,7 +29,9 @@ import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Engine {
     World world;
@@ -179,6 +180,53 @@ public class Engine {
     public boolean validateEnvVariableValue(EnvVariableValueDTO envVariableValueDTO) {
         PropertyDefinition propertyDefinition = this.world.getEnvironment().getPropertyDefinitionByName(envVariableValueDTO.getName());
         return propertyDefinition.getType().isMyType(envVariableValueDTO.getValue());
+    }
+
+    public SimulationIDListDTO getSimulationListDTO() {
+        SimulationIDDTO[] simulationIDDTOS = this.simulationManager.getSimulationIDDTOS();
+        return new SimulationIDListDTO(simulationIDDTOS);
+    }
+
+    public boolean validateSimulationID(int userChoice) {
+        return this.simulationManager.isSimulationIDExists(userChoice);
+    }
+
+    public SimulationResultByAmountDTO getSimulationResultByAmountDTO(int simulationID) {
+        Simulation simulation = this.simulationManager.getSimulationByID(simulationID);
+        return new SimulationResultByAmountDTO(simulation.getId(), getEntityResultsDTO(simulation));
+    }
+
+    private EntityResultDTO[] getEntityResultsDTO(Simulation simulation) {
+        //use stream
+        EntityResultDTO[] entityResultDTOS = stream(this.world.getEntities().toArray())
+                .map(entityDefinition -> {
+                    String name = ((EntityDefinition) entityDefinition).getName();
+                    int startingPopulation = ((EntityDefinition) entityDefinition).getPopulation();
+                    int endingPopulation = simulation.getEntityInstanceManager().getEntityCountByName(name);
+                    return new EntityResultDTO(name, startingPopulation, endingPopulation);
+                })
+                .toArray(EntityResultDTO[]::new);
+        return entityResultDTOS;
+    }
+
+
+    public HistogramDTO getHistogramDTO(int simulationID, String entityName, String propertyName) {
+        Map<Object, Integer> histogram = new HashMap<>();
+        EntityDefinition entityDefinition = this.world.getEntityByName(entityName);
+        PropertyDefinition propertyDefinition = entityDefinition.getPropertyDefinitionByName(propertyName);
+        for (EntityInstance entityInstance : this.simulationManager.getSimulationByID(simulationID).getEntityInstanceManager().getInstances()) {
+            if (entityInstance.getEntityDefinition().getName().equals(entityName)) {
+                // we already know that the property is there
+                PropertyInstance propertyInstance = entityInstance.getPropertyByName(propertyName);
+                Object value = propertyInstance.getValue();
+                if (histogram.containsKey(value)) {
+                    histogram.put(value, histogram.get(value) + 1);
+                } else {
+                    histogram.put(value, 1);
+                }
+            }
+        }
+        return new HistogramDTO(histogram);
     }
 }
 

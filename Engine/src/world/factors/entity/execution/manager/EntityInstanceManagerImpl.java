@@ -73,5 +73,14 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         return false;
     }
 
-
+    @Override
+    public int getEntityCountByName(String entityName) {
+        int count = 0;
+        for (EntityInstance entityInstance : instances) {
+            if (entityInstance.getEntityDefinition().getName().equals(entityName)) {
+                count++;
+            }
+        }
+        return count;
+    }
 }
