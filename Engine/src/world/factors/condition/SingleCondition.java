@@ -4,16 +4,15 @@ import context.Context;
 import world.factors.entity.definition.EntityDefinition;
 import world.factors.expression.api.AbstractExpression;
 import world.factors.expression.api.Expression;
-import world.factors.property.definition.api.EntityPropertyDefinition;
-import world.factors.property.execution.PropertyInstance;
+import world.factors.property.definition.api.PropertyDefinition;
 
 public class SingleCondition implements Condition{
     private final EntityDefinition entityDefinition;
-    private final EntityPropertyDefinition propertyDefinition;
+    private final PropertyDefinition propertyDefinition;
     private final OperatorType operator;
     private final String value;
 
-    public SingleCondition(EntityDefinition entityDefinition, EntityPropertyDefinition propertyDefinition, OperatorType operator, String value)
+    public SingleCondition(EntityDefinition entityDefinition, PropertyDefinition propertyDefinition, OperatorType operator, String value)
     {
         this.entityDefinition = entityDefinition;
         this.propertyDefinition = propertyDefinition;
@@ -25,7 +24,7 @@ public class SingleCondition implements Condition{
         return entityDefinition;
     }
 
-    public EntityPropertyDefinition getPropertyDefinition() {
+    public PropertyDefinition getPropertyDefinition() {
         return propertyDefinition;
     }
 
@@ -39,7 +38,7 @@ public class SingleCondition implements Condition{
 
     @Override
     public boolean assertCondition(Context context) {
-        Object propertyValue = context.getPropertyByName(this.entityDefinition.getName()).getValue();
+        Object propertyValue = context.getPropertyInstanceByPropertyDefinition(this.propertyDefinition).getValue();
         Expression expression = AbstractExpression.getExpressionByString(this.value, this.entityDefinition);
         Object value = context.getValueByExpression(expression);
         // check if the property value is the same type as the value

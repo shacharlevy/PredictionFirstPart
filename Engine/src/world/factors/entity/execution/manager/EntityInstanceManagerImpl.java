@@ -2,10 +2,9 @@ package world.factors.entity.execution.manager;
 
 
 import world.factors.entity.definition.EntityDefinition;
-import world.factors.property.definition.api.EntityPropertyDefinition;
-import world.factors.property.definition.api.PropertyDefinition;
 import world.factors.entity.execution.EntityInstance;
 import world.factors.entity.execution.EntityInstanceImpl;
+import world.factors.property.definition.api.PropertyDefinition;
 import world.factors.property.execution.PropertyInstance;
 import world.factors.property.execution.PropertyInstanceImpl;
 
@@ -28,9 +27,9 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         EntityInstance newEntityInstance = new EntityInstanceImpl(entityDefinition, count);
         instances.add(newEntityInstance);
 
-        for (EntityPropertyDefinition entityPropertyDefinition : entityDefinition.getProps()) {
-            Object value = entityPropertyDefinition.generateValue();
-            PropertyInstance newPropertyInstance = new PropertyInstanceImpl(entityPropertyDefinition, value);
+        for (PropertyDefinition propertyDefinition : entityDefinition.getProps()) {
+            Object value = propertyDefinition.generateValue();
+            PropertyInstance newPropertyInstance = new PropertyInstanceImpl(propertyDefinition, value);
             newEntityInstance.addPropertyInstance(newPropertyInstance);
         }
         return newEntityInstance;

@@ -41,4 +41,5 @@ public class EntityInstanceImpl implements EntityInstance {
     public EntityDefinition getEntityDefinition() {
         return entityDefinition;
     }
+
 }

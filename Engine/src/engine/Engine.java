@@ -13,10 +13,10 @@ import world.World;
 import world.factors.entity.definition.EntityDefinition;
 import world.factors.environment.definition.impl.EnvVariableManagerImpl;
 import world.factors.environment.execution.api.ActiveEnvironment;
-import world.factors.property.definition.api.EntityPropertyDefinition;
 import world.factors.property.definition.api.NumericPropertyDefinition;
 import world.factors.property.definition.api.PropertyDefinition;
 import world.factors.property.definition.api.PropertyType;
+import world.factors.property.definition.api.Range;
 import world.factors.property.execution.PropertyInstance;
 import world.factors.property.execution.PropertyInstanceImpl;
 import world.factors.rule.Rule;
@@ -94,10 +94,10 @@ public class Engine {
             ValueGeneratorFactory.createRandomBoolean();
         } else if (propertyDefinition.getType() == PropertyType.DECIMAL) {
             NumericPropertyDefinition numericPropertyDefinition = (NumericPropertyDefinition) propertyDefinition;
-            return ValueGeneratorFactory.createRandomInteger((int)numericPropertyDefinition.getRange().getFrom(), (int)numericPropertyDefinition.getRange().getTo());
+            return ValueGeneratorFactory.createRandomInteger(new Range((int)numericPropertyDefinition.getRange().getFrom(), (int)numericPropertyDefinition.getRange().getTo()));
         } else if (propertyDefinition.getType() == PropertyType.FLOAT) {
             NumericPropertyDefinition numericPropertyDefinition = (NumericPropertyDefinition) propertyDefinition;
-            return ValueGeneratorFactory.createRandomFloat((float)numericPropertyDefinition.getRange().getFrom(), (float)numericPropertyDefinition.getRange().getTo());
+            return ValueGeneratorFactory.createRandomFloat(new Range((float)numericPropertyDefinition.getRange().getFrom(), (float)numericPropertyDefinition.getRange().getTo()));
         }
         return ValueGeneratorFactory.createRandomString();
     }
@@ -149,7 +149,7 @@ public class Engine {
         return new EntityDefinitionDTO(name, population, entityPropertyDefinitionDTOS);
     }
 
-    private EntityPropertyDefinitionDTO[] getEntityPropertyDefinitionDTOS(List<EntityPropertyDefinition> properties) {
+    private EntityPropertyDefinitionDTO[] getEntityPropertyDefinitionDTOS(List<PropertyDefinition> properties) {
         EntityPropertyDefinitionDTO[] entityPropertyDefinitionDTOS = new EntityPropertyDefinitionDTO[properties.size()];
         for (int i = 0; i < properties.size(); i++) {
             entityPropertyDefinitionDTOS[i] = getEntityPropertyDefinitionDTO(properties.get(i));
@@ -157,7 +157,7 @@ public class Engine {
         return entityPropertyDefinitionDTOS;
     }
 
-    private EntityPropertyDefinitionDTO getEntityPropertyDefinitionDTO(EntityPropertyDefinition property) {
+    private EntityPropertyDefinitionDTO getEntityPropertyDefinitionDTO(PropertyDefinition property) {
         String name = property.getName();
         String type = property.getType().toString();
         String valueGenerated = property.generateValue().toString();

@@ -1,22 +1,17 @@
 package simulation;
 
-import context.Context;
 import context.ContextImpl;
 import world.World;
 import world.factors.action.api.Action;
 import world.factors.entity.definition.EntityDefinition;
 import world.factors.entity.execution.EntityInstance;
-import world.factors.entity.execution.EntityInstanceImpl;
 import world.factors.entity.execution.manager.EntityInstanceManager;
 import world.factors.entity.execution.manager.EntityInstanceManagerImpl;
 import world.factors.environment.execution.api.ActiveEnvironment;
-import world.factors.property.definition.api.EntityPropertyDefinition;
 import world.factors.rule.Rule;
 
 import java.sql.Time;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Simulation {
     private final int id;
@@ -75,7 +70,7 @@ public class Simulation {
         this.startTime.format(timer);
         initEntityInstancesArray();
         int currentTick = 0;
-        while (this.world.getTermination().isTerminated(currentTick, timer)) {
+        while (!this.world.getTermination().isTerminated(currentTick, timer)) {
             currentTick++;
             for (Rule rule: this.world.getRules()){
                 if (rule.isRuleActive(currentTick)){
