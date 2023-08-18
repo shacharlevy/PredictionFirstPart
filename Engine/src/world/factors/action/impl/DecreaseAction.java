@@ -4,10 +4,13 @@ import world.factors.action.api.AbstractAction;
 import world.factors.action.api.ActionType;
 
 import world.factors.entity.definition.EntityDefinition;
+import world.factors.environment.definition.impl.EnvVariableManagerImpl;
 import world.factors.expression.api.Expression;
 import world.factors.property.definition.api.PropertyType;
 import context.Context;
 import world.factors.property.execution.PropertyInstance;
+
+import java.util.List;
 
 import static world.factors.expression.api.AbstractExpression.getExpressionByString;
 
@@ -62,5 +65,15 @@ public class DecreaseAction extends AbstractAction {
         else {
             throw new IllegalArgumentException("increase action can't operate on a none number property [" + property + "]");
         }
+    }
+
+    @Override
+    public boolean isPropertyExistInEntity() {
+        return entityDefinition.getPropertyDefinitionByName(property) != null;
+    }
+
+    public boolean isMathActionHasNumericArgs(List<EntityDefinition> entities, EnvVariableManagerImpl envVariableManager) {
+        Expression expression = getExpressionByString(byExpression, entityDefinition);
+        return expression.isNumericExpression(entities, envVariableManager);
     }
 }

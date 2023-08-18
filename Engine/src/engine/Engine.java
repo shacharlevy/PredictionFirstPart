@@ -70,6 +70,7 @@ public class Engine implements Serializable {
         Convertor convertor = new Convertor();
         convertor.setGeneratedWorld(generatedWorld);
         World tempWorld = convertor.convertPRDWorldToWorld();
+        validateAllActionsReferToExistingEntityProperties(tempWorld);
         validateMathActionHasNumericArgs(tempWorld.getRules(), tempWorld.getEntities(), (EnvVariableManagerImpl) tempWorld.getEnvironment());
         // if loaded successfully, clear the old engine and set the new one
         this.world = tempWorld;

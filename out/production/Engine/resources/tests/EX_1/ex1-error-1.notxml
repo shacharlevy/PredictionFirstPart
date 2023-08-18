@@ -19,7 +19,7 @@
 			<PRD-population>100</PRD-population>
 			<PRD-properties>
 				<PRD-property type="decimal">
-					<PRD-name>age</PRD-name>
+					<PRD-name>lung-cancer-progress</PRD-name>
 					<PRD-range to="100" from="0"/>
 					<PRD-value random-initialize="false" init="0"/>
 				</PRD-property>

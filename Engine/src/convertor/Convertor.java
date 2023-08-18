@@ -234,7 +234,7 @@ public class Convertor implements Serializable {
                 .filter(entityPropertyDefinition -> entityPropertyDefinition.getName().equals(property))
                 .collect(Collectors.toList());
         if (filteredProps.size() != 1) {
-            throw new RuntimeException("There is no property named " + property + " or there are more than one");
+            throw new RuntimeException("5. Action " + property + " refers to non-existing entity property");
         }
         return filteredProps.get(0);
     }
