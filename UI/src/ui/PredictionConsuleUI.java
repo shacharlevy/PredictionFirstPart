@@ -9,6 +9,7 @@ import java.util.Scanner;
 import dtos.*;
 import engine.Serialization;
 import sun.java2d.marlin.stats.Histogram;
+import ui.input.InputManager;
 import ui.menu.Menu;
 import ui.menu.MenuItem;
 import ui.menu.MenuOptions;
@@ -20,6 +21,7 @@ public class PredictionConsuleUI {
     private String currentLoadedPathString;
     private Engine engine = new Engine();
     private Serialization serialization = new Serialization();
+    private final InputManager inputManager = new InputManager();
     public PredictionConsuleUI(){
         this.currentLoadedPathString = "no path loaded";
         List<MenuItem> menuItems = new ArrayList<>();
@@ -38,12 +40,7 @@ public class PredictionConsuleUI {
         MenuOptions userChoice = null;
         while(userChoice != MenuOptions.EXIT){
             System.out.println(mainMenu.toString());
-            String input = scanner.nextLine();
-            while(!isPositiveNumberInRange(input, 1, MenuOptions.values().length)){
-                System.out.println("Invalid choice, please try again: ");
-                input = scanner.nextLine();
-            }
-            userChoice = MenuOptions.getChoice(Integer.parseInt(input));
+            userChoice = MenuOptions.getChoice(inputManager.getIntInRange(1, MenuOptions.values().length));
             switch(userChoice){
                 case LOAD_WORLD_XML:
                     System.out.println(this.mainMenu.getMenuItemInstructions(userChoice.ordinal()));
@@ -131,18 +128,18 @@ public class PredictionConsuleUI {
         }
         System.out.println("Please enter the ID of the simulation you want to see:");
         Scanner scanner = new Scanner(System.in);
-        int simulationID = scanner.nextInt();
+        int simulationID = inputManager.getInt();
         while (!engine.validateSimulationID(simulationID)) {
             System.out.println("Invalid ID, please try again: ");
-            simulationID = scanner.nextInt();
+            simulationID = inputManager.getInt();
         }
         System.out.println("Please choose the display mode:\n"
                 + "1. Display by amount\n"
                 + "2. Display by characteristic histogram\n");
-        int displayMode = scanner.nextInt();
+        int displayMode = inputManager.getInt();
         while (displayMode != 1 && displayMode != 2) {
             System.out.println("Invalid choice, please try again: ");
-            displayMode = scanner.nextInt();
+            displayMode = inputManager.getInt();
         }
         if (displayMode == 1) {
             showSimulationResultByAmount(simulationID);
@@ -222,27 +219,11 @@ public class PredictionConsuleUI {
         }
     }
 
-    private boolean isPositiveNumberInRange(String str, int min, int max) {
-        try {
-            int number = Integer.parseInt(str);
-            return number >= min && number <= max;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
     private EnvVariablesValuesDTO getEnvVariablesValuesDTOFromUser(EnvVariablesDTO envVariablesDTO) {
         EnvVariableValueDTO[] envVariableValues = new EnvVariableValueDTO[envVariablesDTO.getEnvVariables().length];
         showEnvVariablesListOfNames(envVariablesDTO);
         System.out.println("Please enter the number of variable you want to insert value for, or 0 to skip: ");
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-        int envVariablesNumber;
-        while (!isPositiveNumberInRange(input, 0, envVariablesDTO.getEnvVariables().length)) {
-            System.out.println("Invalid choice, please try again: ");
-            input = scanner.nextLine();
-        }
-        envVariablesNumber = Integer.parseInt(input);
+        int envVariablesNumber = inputManager.getIntInRange(0, envVariablesDTO.getEnvVariables().length);
         while (envVariablesNumber != 0) {
             //Show the user the additional details of the variable (type, range if relevant)
             EnvVariableDefinitionDTO envVariable = envVariablesDTO.getEnvVariables()[envVariablesNumber - 1];
@@ -250,11 +231,7 @@ public class PredictionConsuleUI {
             envVariableValues[envVariablesNumber - 1] = getEnvVariableValueDTOFromUser(envVariable, envVariablesNumber);
             showEnvVariablesListOfNames(envVariablesDTO);
             System.out.println("Please enter the number of variable you want to insert value for, or 0 to skip: ");
-            input = scanner.nextLine();
-            while (!isPositiveNumberInRange(input, 0, envVariablesDTO.getEnvVariables().length)) {
-                System.out.println("Invalid choice, please try again: ");
-                input = scanner.nextLine();
-            }
+            envVariablesNumber = inputManager.getIntInRange(0, envVariablesDTO.getEnvVariables().length);
         }
         for (int i = 0; i < envVariableValues.length; i++) {
             if (envVariableValues[i] == null) {
