@@ -68,10 +68,15 @@ public class Engine {
         validateFileIsXML(xmlPath);
         PRDWorld generatedWorld = fromXmlFileToObject(xmlPath);
         validateXMLContent(generatedWorld);
-        this.convertor.setGeneratedWorld(generatedWorld);
-        this.world = convertor.convertPRDWorldToWorld();
-        validateMathActionHasNumericArgs(this.world.getRules(), this.world.getEntities(), (EnvVariableManagerImpl) this.world.getEnvironment());
-
+        Convertor tempConvertor = new Convertor();
+        tempConvertor.setGeneratedWorld(generatedWorld);
+        World tempWorld = tempConvertor.convertPRDWorldToWorld();
+        validateMathActionHasNumericArgs(tempWorld.getRules(), tempWorld.getEntities(), (EnvVariableManagerImpl) tempWorld.getEnvironment());
+        // if loaded successfully, clear the old engine and set the new one
+        this.world = tempWorld;
+        this.convertor = tempConvertor;
+        this.simulationManager = new SimulationManager();
+        this.activeEnvironment = null;
     }
 
     public EnvVariablesValuesDTO updateActiveEnvironmentAndInformUser(EnvVariablesValuesDTO envVariablesValuesDTO) {
