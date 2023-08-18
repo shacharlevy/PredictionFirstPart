@@ -4,12 +4,13 @@ import dtos.SimulationIDDTO;
 import world.World;
 import world.factors.environment.execution.api.ActiveEnvironment;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SimulationManager {
+public class SimulationManager implements Serializable {
     private Map<Integer, Simulation> simulations;
     private int currentSimulationIndex;
 

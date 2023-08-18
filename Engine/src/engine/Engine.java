@@ -26,6 +26,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -33,15 +34,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Engine {
-    World world;
-    Convertor convertor;
-    SimulationManager simulationManager;
-    ActiveEnvironment activeEnvironment;
+public class Engine implements Serializable {
+    private World world;
+    private SimulationManager simulationManager;
+    private ActiveEnvironment activeEnvironment;
 
     public Engine() {
         this.world = null;
-        this.convertor = new Convertor();
         this.simulationManager = new SimulationManager();
         this.activeEnvironment = null;
     }
@@ -68,13 +67,12 @@ public class Engine {
         validateFileIsXML(xmlPath);
         PRDWorld generatedWorld = fromXmlFileToObject(xmlPath);
         validateXMLContent(generatedWorld);
-        Convertor tempConvertor = new Convertor();
-        tempConvertor.setGeneratedWorld(generatedWorld);
-        World tempWorld = tempConvertor.convertPRDWorldToWorld();
+        Convertor convertor = new Convertor();
+        convertor.setGeneratedWorld(generatedWorld);
+        World tempWorld = convertor.convertPRDWorldToWorld();
         validateMathActionHasNumericArgs(tempWorld.getRules(), tempWorld.getEntities(), (EnvVariableManagerImpl) tempWorld.getEnvironment());
         // if loaded successfully, clear the old engine and set the new one
         this.world = tempWorld;
-        this.convertor = tempConvertor;
         this.simulationManager = new SimulationManager();
         this.activeEnvironment = null;
     }

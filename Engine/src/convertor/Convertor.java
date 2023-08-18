@@ -23,11 +23,12 @@ import world.factors.rule.Rule;
 import world.factors.rule.RuleImpl;
 import world.factors.termination.Termination;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Convertor {
+public class Convertor implements Serializable {
     private PRDWorld generatedWorld;
 
     public World convertPRDWorldToWorld() {

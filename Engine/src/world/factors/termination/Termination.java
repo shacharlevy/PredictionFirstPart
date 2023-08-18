@@ -1,7 +1,8 @@
 package world.factors.termination;
+import java.io.Serializable;
 import java.sql.Time;
 
-public class Termination {
+public class Termination implements Serializable {
     private int secondsCount = -1;
     private int ticksCount = -1;
     //private boolean interactive; //TODO: check type

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import dtos.*;
+import engine.Serialization;
 import sun.java2d.marlin.stats.Histogram;
 import ui.menu.Menu;
 import ui.menu.MenuItem;
@@ -18,6 +19,7 @@ public class PredictionConsuleUI {
     private final Menu mainMenu;
     private String currentLoadedPathString;
     private Engine engine = new Engine();
+    private Serialization serialization = new Serialization();
     public PredictionConsuleUI(){
         this.currentLoadedPathString = "no path loaded";
         List<MenuItem> menuItems = new ArrayList<>();
@@ -26,6 +28,8 @@ public class PredictionConsuleUI {
         menuItems.add(new MenuItem ("Activate Simulation", null, null));
         menuItems.add(new MenuItem ("Show Full Past Simulation info", null, null));
         menuItems.add(new MenuItem ("Exit", null, null));
+        menuItems.add(new MenuItem ("Save System State", null, null));
+        menuItems.add(new MenuItem ("Load System State", null, null));
         mainMenu = new Menu(menuItems);
     }
 
@@ -61,11 +65,46 @@ public class PredictionConsuleUI {
                 case EXIT:
                     System.out.println("Goodbye!");
                     break;
+                case SAVE_SYSTEM_STATE:
+                    System.out.println("Saving system state");
+                    String path = getFullPathFromUser();
+                    saveSystemState(path);
+                    break;
+                case LOAD_SYSTEM_STATE:
+                    System.out.println("Loading system state");
+                    String pathToLoad = getFullPathFromUser();
+                    loadSystemState(pathToLoad);
+                    break;
                 default:
                     System.out.println("Invalid choice");
                     break;
             }
         }
+    }
+
+    private void loadSystemState(String pathToLoad) {
+        try {
+            engine = serialization.readSystemFromFile(pathToLoad);
+            System.out.println("System state loaded successfully\n");
+        } catch (Exception e) {
+            System.out.println("Error loading system state: " + e.getMessage() + "\n");
+        }
+    }
+
+    private void saveSystemState(String path) {
+        try {
+            serialization.writeSystemToFile(path, engine);
+            System.out.println("System state saved successfully\n");
+        } catch (Exception e) {
+            System.out.println("Error saving system state: " + e.getMessage() + "\n");
+        }
+    }
+
+    private String getFullPathFromUser() {
+        System.out.println("Please enter the full path to the file including the file name:");
+        Scanner scanner = new Scanner(System.in);
+        String path = scanner.next();
+        return path;
     }
 
     private void showFullPastSimulationDetails() {

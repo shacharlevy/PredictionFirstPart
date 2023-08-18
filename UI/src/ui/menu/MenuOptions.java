@@ -8,7 +8,9 @@ public enum MenuOptions {
     SHOW_SIMULATION_DETAILS(2),
     ACTIVATE_SIMULATION(3),
     FULL_PAST_SIMULATION_DETAILS(4),
-    EXIT(5);
+    EXIT(5),
+    SAVE_SYSTEM_STATE(6),
+    LOAD_SYSTEM_STATE(7);
 
     private int id;
     private final static Map<Integer, MenuOptions> idToChoice = new HashMap<>();

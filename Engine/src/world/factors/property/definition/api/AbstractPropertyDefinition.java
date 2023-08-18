@@ -2,7 +2,9 @@ package world.factors.property.definition.api;
 
 import value.generator.api.ValueGenerator;
 
-public abstract class AbstractPropertyDefinition<T> implements PropertyDefinition{
+import java.io.Serializable;
+
+public abstract class AbstractPropertyDefinition<T> implements PropertyDefinition, Serializable {
     protected final String name;
     protected final PropertyType propertyType;
     protected ValueGenerator valueGenerator;

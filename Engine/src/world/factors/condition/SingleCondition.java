@@ -6,7 +6,9 @@ import world.factors.expression.api.AbstractExpression;
 import world.factors.expression.api.Expression;
 import world.factors.property.definition.api.PropertyDefinition;
 
-public class SingleCondition implements Condition{
+import java.io.Serializable;
+
+public class SingleCondition implements Condition, Serializable {
     private final EntityDefinition entityDefinition;
     private final PropertyDefinition propertyDefinition;
     private final OperatorType operator;

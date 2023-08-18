@@ -2,10 +2,11 @@ package world.factors.entity.definition;
 
 import world.factors.property.definition.api.PropertyDefinition;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityDefinitionImpl implements EntityDefinition {
+public class EntityDefinitionImpl implements EntityDefinition, Serializable {
 
     private final String name;
     private final int population;

@@ -10,6 +10,7 @@ import world.factors.entity.execution.manager.EntityInstanceManagerImpl;
 import world.factors.environment.execution.api.ActiveEnvironment;
 import world.factors.rule.Rule;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Simulation {
+public class Simulation implements Serializable {
     private final int id;
     private final ActiveEnvironment activeEnvironment;
     private final World world;

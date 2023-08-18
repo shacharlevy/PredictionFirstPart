@@ -8,10 +8,11 @@ import world.factors.property.definition.api.PropertyDefinition;
 import world.factors.property.execution.PropertyInstance;
 import world.factors.property.execution.PropertyInstanceImpl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityInstanceManagerImpl implements EntityInstanceManager {
+public class EntityInstanceManagerImpl implements EntityInstanceManager, Serializable {
 
     private int count;
     private List<EntityInstance> instances;
