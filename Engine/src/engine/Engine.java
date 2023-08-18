@@ -37,11 +37,13 @@ public class Engine {
     World world;
     Convertor convertor;
     SimulationManager simulationManager;
+    ActiveEnvironment activeEnvironment;
 
     public Engine() {
         this.world = null;
         this.convertor = new Convertor();
         this.simulationManager = new SimulationManager();
+        this.activeEnvironment = null;
     }
 
     private static PRDWorld fromXmlFileToObject(Path path) {
@@ -72,18 +74,23 @@ public class Engine {
 
     }
 
-
-    public SimulationResultDTO activateSimulation(EnvVariablesValuesDTO envVariablesValuesDTO) {
+    public EnvVariablesValuesDTO updateActiveEnvironmentAndInformUser(EnvVariablesValuesDTO envVariablesValuesDTO) {
         ActiveEnvironment activeEnvironment = this.world.getEnvironment().createActiveEnvironment();
-        for (EnvVariableValueDTO envVariableValueDTO : envVariablesValuesDTO.getEnvVariablesValues()) {
+        for (int i = 0; i < envVariablesValuesDTO.getEnvVariablesValues().length; i++) {
+            EnvVariableValueDTO envVariableValueDTO = envVariablesValuesDTO.getEnvVariablesValues()[i];
             Object value = envVariableValueDTO.getValue();
-            if (envVariableValueDTO.getValue().equals("")) {
+            if (value.equals("")) {
                 value = this.world.getEnvironment().getPropertyDefinitionByName(envVariableValueDTO.getName()).generateValue();
             }
             PropertyInstance propertyInstance = new PropertyInstanceImpl(this.world.getEnvironment().getPropertyDefinitionByName(envVariableValueDTO.getName()), value);
             activeEnvironment.addPropertyInstance(propertyInstance);
+            envVariablesValuesDTO.getEnvVariablesValues()[i] = new EnvVariableValueDTO(envVariableValueDTO.getName(), value.toString(), true);
         }
-        Simulation simulation = this.simulationManager.createSimulation(this.world, activeEnvironment);
+        this.activeEnvironment = activeEnvironment;
+        return envVariablesValuesDTO;
+    }
+    public SimulationResultDTO activateSimulation() {
+        Simulation simulation = this.simulationManager.createSimulation(this.world, this.activeEnvironment);
         simulation.run();
         return new SimulationResultDTO(simulation.getId(), simulation.isTerminatedBySecondsCount(), simulation.isTerminatedByTicksCount());
     }

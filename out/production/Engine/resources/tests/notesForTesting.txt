@@ -1,6 +1,7 @@
 C:\src\github.com\OriBraverman\PredictionFirstPart\Engine\src\resources\tests\EX_1\ex1-cigarets.xml
 
 changed in the ex1-cigarets.xml the following:
+(because the population become 0 after 840 ticks)
 <PRD-termination>
 		<PRD-by-ticks count="840"/>
 		<PRD-by-second count="10"/>
@@ -8,6 +9,6 @@ changed in the ex1-cigarets.xml the following:
 
 to:
 <PRD-termination>
-		<PRD-by-ticks count="600"/>
+		<PRD-by-ticks count="200"/>
 		<PRD-by-second count="10"/>
 	</PRD-termination>
