@@ -23,7 +23,7 @@ import static world.factors.expression.api.AbstractExpression.getExpressionByStr
 public class XMLValidator {
     public static void validateFileExists(Path file) throws FileNotFoundException {
         if(!file.toFile().exists()) {
-            throw new FileNotFoundException(file.getFileName().toString());
+            throw new FileNotFoundException(file.getFileName().toString() + " file not found.");
         }
     }
 

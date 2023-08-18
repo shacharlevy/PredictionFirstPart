@@ -46,8 +46,6 @@ public class PredictionConsuleUI {
                     try {
                         this.engine.loadXML(this.currentLoadedPathString);
                         System.out.println("XML file loaded successfully\n");
-                    } catch (FileNotFoundException e) {
-                        System.out.println("Error loading XML file: " + e.getMessage() + "\n");
                     } catch (Exception e) {
                         System.out.println("Error loading XML file: " + e.getMessage() + "\n");
                     }
@@ -211,16 +209,27 @@ public class PredictionConsuleUI {
         }
     }
 
+    private boolean isPositiveNumberInRange(String str, int min, int max) {
+        try {
+            int number = Integer.parseInt(str);
+            return number >= min && number <= max;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
     private EnvVariablesValuesDTO getEnvVariablesValuesDTOFromUser(EnvVariablesDTO envVariablesDTO) {
         EnvVariableValueDTO[] envVariableValues = new EnvVariableValueDTO[envVariablesDTO.getEnvVariables().length];
         showEnvVariablesListOfNames(envVariablesDTO);
         System.out.println("Please enter the number of variable you want to insert value for, or 0 to skip: ");
         Scanner scanner = new Scanner(System.in);
-        int envVariablesNumber = scanner.nextInt();
-        while (envVariablesNumber < 0 || envVariablesNumber > envVariablesDTO.getEnvVariables().length) {
+        String input = scanner.nextLine();
+        int envVariablesNumber;
+        while (!isPositiveNumberInRange(input, 0, envVariablesDTO.getEnvVariables().length)) {
             System.out.println("Invalid choice, please try again: ");
-            envVariablesNumber = scanner.nextInt();
+            input = scanner.nextLine();
         }
+        envVariablesNumber = Integer.parseInt(input);
         while (envVariablesNumber != 0) {
             //Show the user the additional details of the variable (type, range if relevant)
             EnvVariableDefinitionDTO envVariable = envVariablesDTO.getEnvVariables()[envVariablesNumber - 1];
@@ -228,10 +237,10 @@ public class PredictionConsuleUI {
             envVariableValues[envVariablesNumber - 1] = getEnvVariableValueDTOFromUser(envVariable, envVariablesNumber);
             showEnvVariablesListOfNames(envVariablesDTO);
             System.out.println("Please enter the number of variable you want to insert value for, or 0 to skip: ");
-            envVariablesNumber = scanner.nextInt();
-            while (envVariablesNumber < 0 || envVariablesNumber > envVariablesDTO.getEnvVariables().length) {
+            input = scanner.nextLine();
+            while (!isPositiveNumberInRange(input, 0, envVariablesDTO.getEnvVariables().length)) {
                 System.out.println("Invalid choice, please try again: ");
-                envVariablesNumber = scanner.nextInt();
+                input = scanner.nextLine();
             }
         }
         for (int i = 0; i < envVariableValues.length; i++) {
