@@ -238,6 +238,10 @@ public class Engine implements Serializable {
         }
         return new HistogramDTO(histogram);
     }
+
+    public boolean isXMLLoaded() {
+        return this.world != null;
+    }
 }
 
 

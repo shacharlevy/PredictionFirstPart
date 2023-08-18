@@ -38,11 +38,16 @@ public class PredictionConsuleUI {
         MenuOptions userChoice = null;
         while(userChoice != MenuOptions.EXIT){
             System.out.println(mainMenu.toString());
-            userChoice = MenuOptions.getChoice(scanner.nextInt());
+            String input = scanner.nextLine();
+            while(!isPositiveNumberInRange(input, 1, MenuOptions.values().length)){
+                System.out.println("Invalid choice, please try again: ");
+                input = scanner.nextLine();
+            }
+            userChoice = MenuOptions.getChoice(Integer.parseInt(input));
             switch(userChoice){
                 case LOAD_WORLD_XML:
                     System.out.println(this.mainMenu.getMenuItemInstructions(userChoice.ordinal()));
-                    this.currentLoadedPathString = scanner.next();
+                    this.currentLoadedPathString = scanner.nextLine();
                     try {
                         this.engine.loadXML(this.currentLoadedPathString);
                         System.out.println("XML file loaded successfully\n");
@@ -51,9 +56,17 @@ public class PredictionConsuleUI {
                     }
                     break;
                 case SHOW_SIMULATION_DETAILS:
+                    if (!this.engine.isXMLLoaded()) {
+                        System.out.println("No XML file was loaded yet\n");
+                        break;
+                    }
                     showSimulationDetails(engine.getSimulationDetailsDTO());
                     break;
                 case ACTIVATE_SIMULATION:
+                    if (!this.engine.isXMLLoaded()) {
+                        System.out.println("No XML file was loaded yet\n");
+                        break;
+                    }
                     System.out.println("Simulation activated");
                     activateSimulation();
                     break;
@@ -101,7 +114,7 @@ public class PredictionConsuleUI {
     private String getFullPathFromUser() {
         System.out.println("Please enter the full path to the file including the file name:");
         Scanner scanner = new Scanner(System.in);
-        String path = scanner.next();
+        String path = scanner.nextLine();
         return path;
     }
 
