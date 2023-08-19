@@ -132,14 +132,15 @@ public class ContextImpl implements Context {
 
     @Override
     public void setPropertyValue(String name, String property, String value) {
-        Expression expression = AbstractExpression.getExpressionByString(value, primaryEntityInstance.getEntityDefinition());
-        Object evaluateValue = expression.evaluate(this);
         EntityInstance entityInstance = entityInstanceManager.getEntityInstanceByName(name);
+        Expression expression = AbstractExpression.getExpressionByString(value, primaryEntityInstance.getEntityDefinition());
+        Object evaluateValue = getValueByExpression(expression);
+        // check if entity instance is exist
         if (entityInstance == null) {
             throw new IllegalArgumentException("entity [" + name + "] is not exist");
         }
         // check if entity instance property type is the same as evaluate type
-        if (!entityInstance.getPropertyByName(property).getType().equals(evaluateValue.getClass())) {
+        if (!entityInstance.getPropertyByName(property).getValue().getClass().equals(evaluateValue.getClass())) {
             throw new IllegalArgumentException("property [" + property + "] type is not the same as evaluate type");
         }
         entityInstance.getPropertyByName(property).updateValue(evaluateValue);
